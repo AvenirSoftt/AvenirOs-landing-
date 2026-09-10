@@ -158,6 +158,148 @@ body {
   }
 }
 
+/* ── Оживление интерфейса ─────────────────────────────────────
+   Всё, что ниже, включается ОДНИМ признаком — `data-shown="true"`,
+   который ставит наблюдатель из components/ui/reveal.tsx. Поэтому
+   график рисуется, полоса заполняется и карточки въезжают ровно
+   тогда, когда человек до них домотал, а не «где-то в фоне».
+
+   Почему это важнее красоты: страница показывает ЦИФРЫ. Полоса,
+   которая доезжает до 108,7%, и линия, которая прорисовывается, —
+   это способ прочитать величину, а не украшение. */
+
+/* Полоса заполняется слева направо. */
+.grow-x {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1s var(--ease-out-quint);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-shown="true"] .grow-x,
+.rise-screen .grow-x {
+  transform: scaleX(1);
+}
+
+/* Столбик растёт снизу. */
+.grow-y {
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 0.85s var(--ease-out-quint);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-shown="true"] .grow-y,
+.rise-screen .grow-y {
+  transform: scaleY(1);
+}
+
+/* Линия графика рисуется сама. `--len` — длина пути с запасом. */
+.draw {
+  stroke-dasharray: var(--len, 1200);
+  stroke-dashoffset: var(--len, 1200);
+  transition: stroke-dashoffset 1.7s var(--ease-out-quint);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-shown="true"] .draw,
+.rise-screen .draw {
+  stroke-dashoffset: 0;
+}
+
+/* Дуга кольца: дасharray уже занят длиной дуги, поэтому едет только смещение. */
+.draw-arc {
+  stroke-dashoffset: var(--len, 0);
+  transition: stroke-dashoffset 1.4s var(--ease-out-quint);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-shown="true"] .draw-arc,
+.rise-screen .draw-arc {
+  stroke-dashoffset: 0;
+}
+
+/* Заливка под линией подтягивается следом. */
+.fade-in-slow {
+  opacity: 0;
+  transition: opacity 1.2s ease-out;
+  transition-delay: var(--d, 600ms);
+}
+
+[data-shown="true"] .fade-in-slow,
+.rise-screen .fade-in-slow {
+  opacity: 1;
+}
+
+/* Карточка/узел появляется с лёгким приближением. */
+.pop {
+  opacity: 0;
+  transform: translateY(10px) scale(0.985);
+  transition:
+    opacity 0.6s var(--ease-out-quint),
+    transform 0.6s var(--ease-out-quint);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-shown="true"] .pop,
+.rise-screen .pop {
+  opacity: 1;
+  transform: none;
+}
+
+/* Дыхание центра схемы — единственная бесконечная анимация на странице. */
+.breathe {
+  animation: breathe 4.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.06);
+  }
+}
+
+/* Карточки, которые приподнимаются под курсором. */
+.lift {
+  transition:
+    transform 0.35s var(--ease-out-quint),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.lift:hover {
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grow-x,
+  .grow-y,
+  .draw,
+  .draw-arc,
+  .fade-in-slow,
+  .pop {
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+
+  .breathe {
+    animation: none;
+  }
+
+  /* Бегущие точки на схеме — это SMIL, его медиазапрос не глушит: прячем. */
+  .flow-dot {
+    display: none;
+  }
+}
+
 /* Сетка на тёмном фоне — «техническая» подложка вместо картинок. */
 .grid-lines {
   background-image:

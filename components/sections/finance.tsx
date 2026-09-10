@@ -42,7 +42,7 @@ export function Finance() {
             <div className="rounded-2xl border border-line bg-panel p-5">
               <p className="mb-4 text-[12.5px] font-semibold text-snow">Reja/fakt · 2026</p>
               <div className="space-y-4">
-                {planFact.slice(0, 3).map((p) => (
+                {planFact.slice(0, 3).map((p, i) => (
                   <PlanBar
                     key={p.label}
                     label={p.label}
@@ -51,6 +51,7 @@ export function Finance() {
                     target={p.target}
                     forecast={p.forecast}
                     t={p.tone}
+                    delay={150 + i * 110}
                   />
                 ))}
               </div>
@@ -68,7 +69,7 @@ export function Finance() {
                 </div>
               </div>
               <ul className="mt-4 space-y-2">
-                {health.parts.map((p) => (
+                {health.parts.map((p, i) => (
                   <li key={p.label}>
                     <div className="mb-1 flex items-baseline justify-between text-[11.5px]">
                       <span className="text-snow-2">{p.label}</span>
@@ -78,8 +79,8 @@ export function Finance() {
                     </div>
                     <div className="h-1 overflow-hidden rounded-full bg-[#1e2a3a]">
                       <span
-                        className={`block h-full rounded-full ${p.score >= 60 ? "bg-success" : "bg-danger"}`}
-                        style={{ width: `${Math.max(4, p.score)}%` }}
+                        className={`grow-x block h-full rounded-full ${p.score >= 60 ? "bg-success" : "bg-danger"}`}
+                        style={{ width: `${Math.max(4, p.score)}%`, "--d": `${300 + i * 90}ms` } as React.CSSProperties}
                       />
                     </div>
                   </li>

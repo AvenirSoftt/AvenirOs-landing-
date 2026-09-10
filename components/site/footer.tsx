@@ -1,3 +1,4 @@
+import { Mark } from "@/components/site/mark";
 import { Shell } from "@/components/ui/section";
 
 /**
@@ -21,13 +22,13 @@ export function Footer() {
       <Shell>
         <div className="grid gap-10 sm:grid-cols-[1.4fr_1fr_1fr]">
           <div>
+            {/* «Avenir» и «OS» — ОДИН flex-ребёнок. Раньше текст лежал прямо в
+                flex-контейнере с gap, и подвал показывал «Avenir  OS» с дырой. */}
             <p className="flex items-center gap-2.5 text-[16px] font-semibold tracking-tight text-snow">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-primary to-accent">
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M8 1.5 9.6 6.4 14.5 8 9.6 9.6 8 14.5 6.4 9.6 1.5 8 6.4 6.4 8 1.5Z" fill="white" />
-                </svg>
+              <Mark size={28} />
+              <span>
+                Avenir<span className="text-primary-bright">OS</span>
               </span>
-              Avenir<span className="text-primary-bright">OS</span>
             </p>
             <p className="mt-3 max-w-[38ch] text-[13.5px] leading-relaxed text-snow-3">
               Business operating system: CRM, moliya, loyihalar, vazifalar va jamoa — bitta

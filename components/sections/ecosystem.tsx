@@ -49,22 +49,53 @@ export function Ecosystem() {
               </radialGradient>
             </defs>
 
+            {/* Связи прочерчиваются от центра наружу: длина считается точно
+                (это отрезок), поэтому линия доезжает ровно до узла, а не
+                «примерно». Разбег по времени — чтобы схема собиралась, а не
+                вспыхивала целиком. */}
+            {nodes.map((n, i) => {
+              const len = Math.hypot(n.x - CX, n.y - CY);
+              return (
+                <line
+                  key={`l-${n.label}`}
+                  className="draw"
+                  style={{ "--len": len, "--d": `${120 + i * 90}ms` } as React.CSSProperties}
+                  x1={CX}
+                  y1={CY}
+                  x2={n.x}
+                  y2={n.y}
+                  stroke="#2f4c74"
+                  strokeWidth="1.25"
+                />
+              );
+            })}
+
+            {/* Точка данных, бегущая от раздела к центру: «ma'lumot bir marta
+                kiritiladi» — здесь это видно, а не только написано. */}
             {nodes.map((n, i) => (
-              <line
-                key={`l-${n.label}`}
-                x1={CX}
-                y1={CY}
-                x2={n.x}
-                y2={n.y}
-                stroke="#2f4c74"
-                strokeWidth="1.25"
-                strokeDasharray="5 7"
-                style={{ animation: `dash-flow ${5 + (i % 3)}s linear infinite` }}
-              />
+              <circle key={`d-${n.label}`} className="flow-dot" r="2.6" fill="#38bdf8">
+                <animateMotion
+                  dur={`${3.4 + (i % 3) * 0.7}s`}
+                  begin={`${i * 0.45}s`}
+                  repeatCount="indefinite"
+                  path={`M${n.x},${n.y} L${CX},${CY}`}
+                  keyPoints="0;1"
+                  keyTimes="0;1"
+                  calcMode="spline"
+                  keySplines="0.4 0 0.2 1"
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0;0.9;0.9;0"
+                  dur={`${3.4 + (i % 3) * 0.7}s`}
+                  begin={`${i * 0.45}s`}
+                  repeatCount="indefinite"
+                />
+              </circle>
             ))}
 
             {/* Центр */}
-            <circle cx={CX} cy={CY} r="86" fill="url(#core)" opacity="0.18" />
+            <circle className="breathe" cx={CX} cy={CY} r="86" fill="url(#core)" opacity="0.18" />
             <circle cx={CX} cy={CY} r="62" fill="#101826" stroke="#2563eb" strokeWidth="1.5" />
             <text
               x={CX}
@@ -79,8 +110,8 @@ export function Ecosystem() {
               yagona baza
             </text>
 
-            {nodes.map((n) => (
-              <g key={n.label}>
+            {nodes.map((n, i) => (
+              <g key={n.label} className="pop" style={{ "--d": `${420 + i * 80}ms` } as React.CSSProperties}>
                 <rect
                   x={n.x - 74}
                   y={n.y - 20}

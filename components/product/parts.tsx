@@ -41,7 +41,17 @@ export function CardLabel({ children, icon }: { children: ReactNode; icon?: Tone
 }
 
 /** Спарклайн под числом — как в карточках «Tushum / Xarajat / Foyda». */
-export function Spark({ points, color, fill = true }: { points: number[]; color: string; fill?: boolean }) {
+export function Spark({
+  points,
+  color,
+  fill = true,
+  delay = 0,
+}: {
+  points: number[];
+  color: string;
+  fill?: boolean;
+  delay?: number;
+}) {
   const w = 220;
   const h = 46;
   const max = Math.max(...points);
@@ -54,9 +64,25 @@ export function Spark({ points, color, fill = true }: { points: number[]; color:
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="h-9 w-full" preserveAspectRatio="none" aria-hidden="true">
       {fill ? (
-        <path d={`${line} L${w},${h} L0,${h} Z`} fill={color} fillOpacity="0.1" />
+        <path
+          className="fade-in-slow"
+          style={{ "--d": "700ms" } as React.CSSProperties}
+          d={`${line} L${w},${h} L0,${h} Z`}
+          fill={color}
+          fillOpacity="0.1"
+        />
       ) : null}
-      <path d={line} fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Линия рисуется сама: длина пути с запасом — ширина плюс подъёмы. */}
+      <path
+        className="draw"
+        style={{ "--len": 300, "--d": `${delay}ms` } as React.CSSProperties}
+        d={line}
+        fill="none"
+        stroke={color}
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -71,7 +97,12 @@ export function HealthRing({ score, size = 132 }: { score: number; size?: number
     <div className="relative grid place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90" aria-hidden="true">
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#223143" strokeWidth="9" />
+        {/* Дуга дорисовывается до значения: 45/100 читается как движение,
+            а не как статичная картинка. Дасharray держит длину дуги, поэтому
+            анимируется только смещение. */}
         <circle
+          className="draw-arc"
+          style={{ "--len": filled, "--d": "260ms" } as React.CSSProperties}
           cx={size / 2}
           cy={size / 2}
           r={r}
@@ -98,6 +129,7 @@ export function PlanBar({
   target,
   forecast,
   t,
+  delay = 0,
 }: {
   label: string;
   value: number;
@@ -105,6 +137,7 @@ export function PlanBar({
   target: string;
   forecast: string;
   t: Tone;
+  delay?: number;
 }) {
   return (
     <div>
@@ -116,8 +149,8 @@ export function PlanBar({
       </div>
       <div className="relative h-1.5 overflow-hidden rounded-full bg-[#1e2a3a]">
         <span
-          className={`absolute inset-y-0 left-0 rounded-full ${tone[t].bg}`}
-          style={{ width: `${Math.min(100, value)}%` }}
+          className={`grow-x absolute inset-y-0 left-0 rounded-full ${tone[t].bg}`}
+          style={{ width: `${Math.min(100, value)}%`, "--d": `${delay}ms` } as React.CSSProperties}
         />
         <span className="absolute inset-y-0 w-px bg-snow-3/50" style={{ left: "72%" }} aria-hidden="true" />
       </div>

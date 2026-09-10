@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { Mark } from "@/components/site/mark";
+
 const links = [
   { href: "#mahsulot", label: "Mahsulot" },
   { href: "#imkoniyatlar", label: "Imkoniyatlar" },
@@ -48,7 +50,7 @@ export function Navbar() {
         aria-label="Asosiy navigatsiya"
       >
         <a href="#" className="flex items-center gap-2.5 font-semibold tracking-tight text-snow">
-          <Logo />
+          <Mark size={28} />
           <span className="text-[15px]">
             Avenir<span className="text-primary-bright">OS</span>
           </span>
@@ -147,15 +149,5 @@ function LangSwitch() {
         </span>
       ))}
     </div>
-  );
-}
-
-function Logo() {
-  return (
-    <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-primary to-accent">
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <path d="M8 1.5 9.6 6.4 14.5 8 9.6 9.6 8 14.5 6.4 9.6 1.5 8 6.4 6.4 8 1.5Z" fill="white" />
-      </svg>
-    </span>
   );
 }

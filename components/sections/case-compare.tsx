@@ -44,7 +44,7 @@ export function CaseStudy() {
               { v: "2026", l: "ishga tushgan yil" },
               { v: "Har kuni", l: "ichki foydalanish" },
             ].map((s) => (
-              <div key={s.l} className="bg-panel px-5 py-6">
+              <div key={s.l} className="lift bg-panel px-5 py-6 hover:bg-panel-2">
                 <p className="text-[26px] font-semibold tracking-[-0.02em] text-snow sm:text-[30px]">
                   {s.v}
                 </p>

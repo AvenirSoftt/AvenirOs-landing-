@@ -108,8 +108,14 @@ export function Modules() {
               <p className="mt-1 max-w-[62ch] text-[14.5px] leading-relaxed text-ink-2">{current.desc}</p>
             </div>
 
+            {/* Ключ плюс класс появления: при выборе другого раздела экран
+                пересобирается и въезжает заново. Без этого переключение
+                выглядит как мгновенная подмена картинки — глазу не за что
+                зацепиться, и непонятно, что вообще изменилось. */}
             {Screen ? (
-              <Screen key={current.key} />
+              <div key={current.key} className="rise">
+                <Screen />
+              </div>
             ) : (
               <Chrome key={current.key} title={`AvenirOS — ${current.name}`}>
                 <div className="p-6">

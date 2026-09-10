@@ -14,7 +14,7 @@ export function ProjectsMockup() {
           <span>Vazifalar</span>
         </div>
 
-        {projects.map((p) => (
+        {projects.map((p, i) => (
           <div
             key={p.name}
             className="grid grid-cols-[1fr_auto] items-center gap-3 px-4 py-3 sm:grid-cols-[1.6fr_1fr_0.9fr_0.8fr_0.6fr]"
@@ -32,10 +32,10 @@ export function ProjectsMockup() {
             <div className="hidden items-center gap-2 sm:flex">
               <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#1e2a3a]">
                 <span
-                  className={`block h-full rounded-full ${
+                  className={`grow-x block h-full rounded-full ${
                     p.tone === "success" ? "bg-success" : p.tone === "warning" ? "bg-warning" : "bg-danger"
                   }`}
-                  style={{ width: `${p.progress}%` }}
+                  style={{ width: `${p.progress}%`, "--d": `${150 + i * 110}ms` } as React.CSSProperties}
                 />
               </span>
               <span className="w-9 text-right text-[11px] font-semibold text-snow-2 tabular">{p.progress}%</span>
@@ -56,7 +56,7 @@ export function TeamMockup() {
   return (
     <Chrome title="AvenirOS — Jamoa yuklamasi">
       <div className="space-y-3 p-4">
-        {team.map((m) => (
+        {team.map((m, i) => (
           <div key={m.name}>
             <div className="mb-1.5 flex items-baseline justify-between gap-3">
               <span className="min-w-0 truncate text-[12.5px] font-medium text-snow">
@@ -73,10 +73,10 @@ export function TeamMockup() {
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-[#1e2a3a]">
               <span
-                className={`block h-full rounded-full ${
+                className={`grow-x block h-full rounded-full ${
                   m.load >= 90 ? "bg-danger" : m.load >= 80 ? "bg-warning" : "bg-success"
                 }`}
-                style={{ width: `${m.load}%` }}
+                style={{ width: `${m.load}%`, "--d": `${150 + i * 120}ms` } as React.CSSProperties}
               />
             </div>
             <p className="mt-1 text-[10.5px] text-snow-3">

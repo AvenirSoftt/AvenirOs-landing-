@@ -14,7 +14,7 @@ export function FinanceMockup() {
     <Chrome title="AvenirOS — Moliya · P&L" tabs={["P&L", "Kesh-flou", "Hisob-fakturalar"]}>
       <div className="p-4">
         <div className="space-y-2.5">
-          {rows.map((r) => (
+          {rows.map((r, i) => (
             <div key={r.label}>
               <div className="mb-1 flex items-baseline justify-between gap-3">
                 <span className="text-[12px] text-snow-2">{r.label}</span>
@@ -22,10 +22,10 @@ export function FinanceMockup() {
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-[#1e2a3a]">
                 <span
-                  className={`block h-full rounded-full ${
+                  className={`grow-x block h-full rounded-full ${
                     r.label === "Foyda" ? "bg-success" : r.label === "Tushum" ? "bg-primary-bright" : "bg-[#2f4258]"
                   }`}
-                  style={{ width: `${r.w}%` }}
+                  style={{ width: `${r.w}%`, "--d": `${120 + i * 110}ms` } as React.CSSProperties}
                 />
               </div>
             </div>
@@ -38,12 +38,21 @@ export function FinanceMockup() {
             <p className="text-[10.5px] text-snow-3">Tushum · Xarajat · Foyda</p>
           </div>
           <div className="flex h-[112px] items-end gap-2.5">
-            {monthly.slice(6).map((m) => (
+            {monthly.slice(6).map((m, i) => (
               <div key={m.m} className="flex flex-1 flex-col items-center gap-1.5">
                 <span className="flex w-full items-end justify-center gap-[3px]" style={{ height: 88 }}>
-                  <i className="w-[30%] rounded-t bg-primary-bright/85" style={{ height: `${(m.revenue / 500) * 100}%` }} />
-                  <i className="w-[30%] rounded-t bg-[#2f4258]" style={{ height: `${((m.revenue - m.profit) / 500) * 100}%` }} />
-                  <i className="w-[30%] rounded-t bg-success/85" style={{ height: `${(m.profit / 500) * 100}%` }} />
+                  <i
+                    className="grow-y w-[30%] rounded-t bg-primary-bright/85"
+                    style={{ height: `${(m.revenue / 500) * 100}%`, "--d": `${i * 70}ms` } as React.CSSProperties}
+                  />
+                  <i
+                    className="grow-y w-[30%] rounded-t bg-[#2f4258]"
+                    style={{ height: `${((m.revenue - m.profit) / 500) * 100}%`, "--d": `${i * 70 + 40}ms` } as React.CSSProperties}
+                  />
+                  <i
+                    className="grow-y w-[30%] rounded-t bg-success/85"
+                    style={{ height: `${(m.profit / 500) * 100}%`, "--d": `${i * 70 + 80}ms` } as React.CSSProperties}
+                  />
                 </span>
                 <span className="text-[9.5px] text-snow-3">{m.m}</span>
               </div>
@@ -81,16 +90,16 @@ export function AnalyticsMockup() {
           <div className="rounded-lg border border-line-soft bg-[#141d29] p-3.5">
             <p className="mb-3 text-[12px] font-semibold text-snow">Tushum va foyda · 12 oy</p>
             <div className="flex h-[128px] items-end gap-1.5">
-              {monthly.map((m) => (
+              {monthly.map((m, i) => (
                 <div key={m.m} className="flex flex-1 flex-col items-center gap-1">
                   <span className="relative flex w-full justify-center" style={{ height: 108 }}>
                     <i
-                      className="absolute bottom-0 w-full max-w-[16px] rounded-t bg-primary-bright/25"
-                      style={{ height: `${(m.revenue / 500) * 100}%` }}
+                      className="grow-y absolute bottom-0 w-full max-w-[16px] rounded-t bg-primary-bright/25"
+                      style={{ height: `${(m.revenue / 500) * 100}%`, "--d": `${i * 55}ms` } as React.CSSProperties}
                     />
                     <i
-                      className="absolute bottom-0 w-full max-w-[16px] rounded-t bg-success"
-                      style={{ height: `${(m.profit / 500) * 100}%` }}
+                      className="grow-y absolute bottom-0 w-full max-w-[16px] rounded-t bg-success"
+                      style={{ height: `${(m.profit / 500) * 100}%`, "--d": `${i * 55 + 90}ms` } as React.CSSProperties}
                     />
                   </span>
                   <span className="text-[8.5px] text-snow-3/80">{m.m}</span>
@@ -108,14 +117,17 @@ export function AnalyticsMockup() {
                 { s: "Diagnostika", n: 6, w: 38 },
                 { s: "Taklif", n: 4, w: 25 },
                 { s: "Muzokara", n: 3, w: 19 },
-              ].map((r) => (
+              ].map((r, i) => (
                 <li key={r.s}>
                   <div className="mb-1 flex items-baseline justify-between text-[11px]">
                     <span className="text-snow-2">{r.s}</span>
                     <span className="font-semibold text-snow tabular">{r.n}</span>
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-[#1e2a3a]">
-                    <span className="block h-full rounded-full bg-accent/80" style={{ width: `${r.w}%` }} />
+                    <span
+                      className="grow-x block h-full rounded-full bg-accent/80"
+                      style={{ width: `${r.w}%`, "--d": `${150 + i * 100}ms` } as React.CSSProperties}
+                    />
                   </div>
                 </li>
               ))}

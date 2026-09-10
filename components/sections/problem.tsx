@@ -45,7 +45,7 @@ export function Problem() {
               {scattered.map((s, i) => (
                 <div
                   key={s.name}
-                  className="rounded-xl border border-hairline bg-card px-3.5 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                  className="lift rounded-xl border border-hairline bg-card px-3.5 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:border-ink-3/40 hover:shadow-[0_10px_24px_-12px_rgba(15,23,42,0.25)]"
                   style={{ transform: `rotate(${(i % 3) - 1}deg)` }}
                 >
                   <p className="text-[13px] font-semibold text-ink-1">{s.name}</p>

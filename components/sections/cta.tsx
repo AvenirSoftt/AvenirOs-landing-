@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { DashboardMockup } from "@/components/product/dashboard";
 import { Reveal } from "@/components/ui/reveal";
 import { Field } from "@/components/ui/field";
 import { Heading, Shell } from "@/components/ui/section";
@@ -32,14 +31,12 @@ export function Cta() {
 
   return (
     <section id="demo" className="relative isolate overflow-hidden bg-ink py-20 sm:py-28">
-      {/* Продукт на фоне: сильно приглушён и не мешает читать. */}
-      <div
-        className="pointer-events-none absolute inset-x-0 -top-24 -z-10 mx-auto hidden max-w-[1100px] opacity-[0.16] blur-[1.5px] lg:block"
-        aria-hidden="true"
-      >
-        <DashboardMockup compact />
-      </div>
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-ink/60 via-ink/95 to-ink" />
+      {/* Раньше здесь стоял приглушённый макет дашборда «на фоне». В деле он
+          читался не как продукт, а как грязное пятно за формой — размытый
+          силуэт, который непонятно что делает. Убран: фон держат сетка и свет,
+          а сам интерфейс на странице уже показан семь раз в полную силу. */}
+      <div className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(60%_60%_at_50%_40%,#000,transparent_100%)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(55%_100%_at_50%_0%,rgba(37,99,235,0.16),transparent_70%)]" />
 
       <Shell>
         <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">

@@ -23,7 +23,7 @@ export function KanbanMockup() {
             читается как «дальше есть ещё», а не как поломка вёрстки. */}
         <span className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#0f151e] to-transparent" aria-hidden="true" />
         <div className="pan-x flex gap-3 p-3.5 sm:p-4">
-        {kanban.map((col) => (
+        {kanban.map((col, ci) => (
           <div key={col.stage} className="w-[228px] shrink-0">
             <div className="mb-2 flex items-center gap-2 px-0.5">
               <i className={`h-1.5 w-1.5 rounded-full ${col.dot}`} aria-hidden="true" />
@@ -37,10 +37,11 @@ export function KanbanMockup() {
             <p className="mb-2 px-0.5 text-[10.5px] text-snow-3 tabular">{col.total} so&apos;m</p>
 
             <div className="space-y-2">
-              {col.leads.map((lead) => (
+              {col.leads.map((lead, li) => (
                 <article
                   key={`${col.stage}-${lead.company}-${lead.note}`}
-                  className="rounded-lg border border-line-soft bg-[#141d29] p-2.5"
+                  className="pop lift rounded-lg border border-line-soft bg-[#141d29] p-2.5 hover:border-primary/40"
+                  style={{ "--d": `${ci * 90 + li * 60}ms` } as React.CSSProperties}
                 >
                   <div className="flex items-center gap-2">
                     <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-[#1e2a3a] text-[10px] font-semibold text-snow-2">
@@ -60,8 +61,8 @@ export function KanbanMockup() {
                   </div>
                   <div className="mt-1 h-1 overflow-hidden rounded-full bg-[#1e2a3a]">
                     <span
-                      className="block h-full rounded-full bg-primary-bright"
-                      style={{ width: `${lead.chance}%` }}
+                      className="grow-x block h-full rounded-full bg-primary-bright"
+                      style={{ width: `${lead.chance}%`, "--d": `${300 + ci * 90 + li * 60}ms` } as React.CSSProperties}
                     />
                   </div>
                   <div className="mt-2 flex items-center gap-1.5">

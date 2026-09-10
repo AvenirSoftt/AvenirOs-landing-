@@ -5,7 +5,6 @@ import { Chrome, Rail } from "@/components/product/chrome";
 import { YearChart } from "@/components/product/year-chart";
 import { Card, CardLabel, HealthRing, PlanBar, Spark, tone } from "@/components/product/parts";
 import { finance, health, planFact } from "@/lib/demo";
-import { uzs } from "@/lib/format";
 
 /**
  * Главный экран AvenirOS — «Дашборд агентства», собранный заново.
@@ -64,6 +63,7 @@ export function DashboardMockup({ compact = false }: { compact?: boolean }) {
               hintTone="success"
               t="success"
               points={[42, 46, 44, 52, 58, 55, 64, 70]}
+              delay={120}
             />
             <Kpi
               label="Oylik xarajat"
@@ -72,6 +72,7 @@ export function DashboardMockup({ compact = false }: { compact?: boolean }) {
               hintTone="success"
               t="danger"
               points={[38, 41, 40, 44, 43, 47, 45, 49]}
+              delay={240}
             />
             <Kpi
               label="Oylik foyda"
@@ -80,6 +81,7 @@ export function DashboardMockup({ compact = false }: { compact?: boolean }) {
               hintTone="warning"
               t="violet"
               points={[12, 14, 13, 18, 21, 19, 24, 27]}
+              delay={360}
             />
 
             <Card>
@@ -114,7 +116,7 @@ export function DashboardMockup({ compact = false }: { compact?: boolean }) {
               <Card className="mt-3">
                 <p className="mb-3 text-[12.5px] font-semibold text-snow">Reja/fakt · 2026</p>
                 <div className="grid gap-3 sm:grid-cols-2 sm:gap-x-6">
-                  {planFact.map((p) => (
+                  {planFact.map((p, i) => (
                     <PlanBar
                       key={p.label}
                       label={p.label}
@@ -123,18 +125,14 @@ export function DashboardMockup({ compact = false }: { compact?: boolean }) {
                       target={p.target}
                       forecast={p.forecast}
                       t={p.tone}
+                      delay={200 + i * 90}
                     />
                   ))}
                 </div>
               </Card>
 
               <Card className="mt-3">
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-[12.5px] font-semibold text-snow">12 oylik dinamika</p>
-                  <p className="text-[10.5px] text-snow-3">
-                    Pik: {uzs(finance.peakMonth)} so&apos;m
-                  </p>
-                </div>
+                <p className="mb-3 text-[12.5px] font-semibold text-snow">12 oylik dinamika</p>
                 <YearChart />
               </Card>
             </>
@@ -152,6 +150,7 @@ function Kpi({
   hintTone,
   t,
   points,
+  delay = 0,
 }: {
   label: string;
   value: number;
@@ -159,6 +158,7 @@ function Kpi({
   hintTone: "success" | "warning";
   t: keyof typeof tone;
   points: number[];
+  delay?: number;
 }) {
   return (
     <Card>
@@ -168,7 +168,7 @@ function Kpi({
       </p>
       <p className={`mt-1 text-[10.5px] ${hintTone === "success" ? "text-success" : "text-warning"}`}>{hint}</p>
       <div className="-mx-1 mt-2">
-        <Spark points={points} color={tone[t].ring} />
+        <Spark points={points} color={tone[t].ring} delay={delay} />
       </div>
     </Card>
   );

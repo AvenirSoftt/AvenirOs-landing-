@@ -1,0 +1,257 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   Токены взяты из САМОГО продукта (apps/web/app/globals.css в
+   Avnir_OS), а не подобраны на глаз: сайт и интерфейс обязаны
+   выглядеть как одна вещь. Тёмные значения — из тёмной темы
+   AvenirOS, светлые — из светлой.
+   ───────────────────────────────────────────────────────────── */
+@theme {
+  /* Тёмная сторона: фон продукта и его поверхности */
+  --color-night: #080b10;
+  --color-ink: #0d1117;
+  --color-panel: #131b26;
+  --color-panel-2: #1a2433;
+  --color-line: #223143;
+  --color-line-soft: #1a2431;
+
+  /* Светлая сторона: маркетинговые секции */
+  --color-paper: #f6f7f9;
+  --color-paper-2: #eef1f5;
+  --color-card: #ffffff;
+  --color-hairline: #e8eaef;
+
+  /* Текст */
+  --color-ink-1: #0f172a;
+  --color-ink-2: #64748b;
+  --color-ink-3: #94a3b8;
+  --color-snow: #f1f5f9;
+  --color-snow-2: #94a3b8;
+  --color-snow-3: #64748b;
+
+  /* Смысловые: ровно те же, что в интерфейсе */
+  --color-primary: #2563eb;
+  --color-primary-bright: #3b82f6;
+  --color-accent: #38bdf8;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+  --color-violet: #a78bfa;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --text-display: clamp(2.75rem, 6.5vw, 5.5rem);
+  --text-h1: clamp(2.25rem, 4.6vw, 3.75rem);
+  --text-h2: clamp(1.75rem, 3.2vw, 2.75rem);
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Липкая шапка не должна накрывать заголовок при переходе по якорю. */
+  scroll-padding-top: 96px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-snow);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv02", "cv03", "cv04", "ss01";
+  /* Горизонтального переполнения на странице быть не должно нигде и никогда:
+     широкие макеты интерфейса прокручиваются ВНУТРИ своей рамки. */
+  overflow-x: clip;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-primary-bright) 35%, transparent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary-bright);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Появление при прокрутке ───────────────────────────────────
+   Класс вешает components/ui/reveal.tsx через IntersectionObserver.
+   На CSS, а не на JS-анимации: это самый частый эффект на странице,
+   и держать под него библиотеку — лишние килобайты в бандле. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s var(--ease-out-quint),
+    transform 0.7s var(--ease-out-quint);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Появление первого экрана ─────────────────────────────────
+   Здесь НЕ IntersectionObserver: первый экран виден сразу, и ждать
+   наблюдателя (а значит, гидрации) — значит на секунду показать пустоту.
+   Порядок задаётся задержкой `--d` прямо в разметке. */
+.rise {
+  opacity: 0;
+  animation: rise-in 0.9s var(--ease-out-quint) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Макет интерфейса въезжает иначе: не снизу, а «приближается». */
+.rise-screen {
+  opacity: 0;
+  animation: screen-in 1.15s var(--ease-out-quint) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: perspective(1600px) rotateX(7deg) scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(1600px) rotateX(0deg) scale(1);
+  }
+}
+
+/* Линия графика рисуется сама. */
+.draw-line {
+  stroke-dasharray: var(--len, 1200);
+  stroke-dashoffset: var(--len, 1200);
+  animation: draw 1.6s var(--ease-out-quint) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .rise-screen,
+  .draw-line {
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
+
+/* Сетка на тёмном фоне — «техническая» подложка вместо картинок. */
+.grid-lines {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.grid-lines-light {
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Свечение под макетом интерфейса: не «неон», а мягкий подсвет снизу. */
+.product-glow::before {
+  content: "";
+  position: absolute;
+  inset: -18% -12% 30%;
+  background: radial-gradient(
+    55% 60% at 50% 45%,
+    rgba(37, 99, 235, 0.5),
+    rgba(56, 189, 248, 0.16) 45%,
+    transparent 72%
+  );
+  filter: blur(70px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Рамка-«стекло» продуктовых макетов. */
+.panel {
+  background: linear-gradient(180deg, #131b26 0%, #0f151e 100%);
+  border: 1px solid var(--color-line);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+    0 40px 80px -32px rgba(2, 6, 23, 0.85);
+}
+
+.hairline {
+  border-color: var(--color-hairline);
+}
+
+/* Числа в интерфейсе — табличными цифрами, иначе при анимации счётчика
+   строка «дышит» и колонки прыгают. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Горизонтальная прокрутка макета внутри своей рамки (мобильные). */
+.pan-x {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.pan-x::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

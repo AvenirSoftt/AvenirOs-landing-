@@ -4,7 +4,7 @@ import { CountUp } from "@/components/ui/count-up";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHead, Shell } from "@/components/ui/section";
 import { finance, health, planFact } from "@/lib/demo";
-
+import type { Dict } from "@/lib/i18n";
 
 /**
  * Финансы + план/факт + здоровье компании.
@@ -13,45 +13,49 @@ import { finance, health, planFact } from "@/lib/demo";
  * «стены карточек». Здесь у каждой своя роль — крупные числа сверху, разбор
  * плана слева, интегральная оценка справа.
  */
-export function Finance() {
+export function Finance({ d }: { d: Dict }) {
   return (
     <Section tone="dark">
       <Shell>
         <SectionHead
-          eyebrow="Moliya"
+          eyebrow={d.finance.eyebrow}
           title={
             <>
-              Biznes raqamlarda emas&nbsp;— <span className="text-snow-3">qarorlarda ko&apos;rinadi.</span>
+              {d.finance.title} <span className="text-snow-3">{d.finance.titleMuted}</span>
             </>
           }
-          lead="Tushum, xarajat va foyda oy oxirini kutmaydi: har bir hisob-faktura va to'lov o'z loyihasiga bog'langan, shuning uchun foydalilik real vaqtda hisoblanadi."
+          lead={d.finance.lead}
         />
 
-        <Reveal className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
-          <Big label="Tushum" value={finance.revenue} tone="text-snow" note="2026 · fakt" />
-          <Big label="Xarajat" value={finance.expenses} tone="text-snow" note="operatsion + tannarx" />
-          <Big label="Foyda" value={finance.profit} tone="text-success" note={`marja ${String(finance.margin).replace(".", ",")}%`} />
-        </Reveal>
+        <div
+          data-stagger
+          className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3"
+        >
+          <Big label={d.finance.revenue} value={finance.revenue} tone="text-snow" note={d.finance.revenueNote} unit={d.ui.currency} />
+          <Big label={d.finance.expenses} value={finance.expenses} tone="text-snow" note={d.finance.expensesNote} unit={d.ui.currency} />
+          <Big label={d.finance.profit} value={finance.profit} tone="text-success" note={d.finance.profitNote} unit={d.ui.currency} />
+        </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1.25fr_0.75fr] lg:gap-8">
           <Reveal className="min-w-0">
-            <FinanceMockup />
+            <FinanceMockup d={d} />
           </Reveal>
 
           <Reveal delay={90} className="space-y-6">
             <div className="rounded-2xl border border-line bg-panel p-5">
-              <p className="mb-4 text-[12.5px] font-semibold text-snow">Reja/fakt · 2026</p>
+              <p className="mb-4 text-[12.5px] font-semibold text-snow">{d.finance.planFact}</p>
               <div className="space-y-4">
                 {planFact.slice(0, 3).map((p, i) => (
                   <PlanBar
                     key={p.label}
-                    label={p.label}
+                    label={d.ui.planLabels[i]}
                     value={p.value}
                     fact={p.fact}
                     target={p.target}
                     forecast={p.forecast}
                     t={p.tone}
                     delay={150 + i * 110}
+                    ui={d.ui}
                   />
                 ))}
               </div>
@@ -61,26 +65,25 @@ export function Finance() {
               <div className="flex items-center gap-5">
                 <HealthRing score={health.score} size={104} />
                 <div className="min-w-0">
-                  <p className="text-[12.5px] font-semibold text-snow">Kompaniya salomatligi</p>
-                  <p className="mt-1 text-[11.5px] leading-snug text-snow-3">
-                    To&apos;rt yo&apos;nalish bitta ko&apos;rsatkichga yig&apos;iladi — qayerda
-                    cho&apos;kayotgani darrov ko&apos;rinadi.
-                  </p>
+                  <p className="text-[12.5px] font-semibold text-snow">{d.finance.healthTitle}</p>
+                  <p className="mt-1 text-[11.5px] leading-snug text-snow-3">{d.finance.healthLead}</p>
                 </div>
               </div>
               <ul className="mt-4 space-y-2">
                 {health.parts.map((p, i) => (
                   <li key={p.label}>
                     <div className="mb-1 flex items-baseline justify-between text-[11.5px]">
-                      <span className="text-snow-2">{p.label}</span>
-                      <span className={`font-semibold tabular ${p.score >= 60 ? "text-success" : "text-danger"}`}>
+                      <span className="text-snow-2">{d.ui.healthParts[i]}</span>
+                      <span
+                        className={`font-semibold tabular ${p.score >= 60 ? "text-success" : "text-danger"}`}
+                      >
                         {p.score}/100
                       </span>
                     </div>
                     <div className="h-1 overflow-hidden rounded-full bg-[#1e2a3a]">
                       <span
                         className={`grow-x block h-full rounded-full ${p.score >= 60 ? "bg-success" : "bg-danger"}`}
-                        style={{ width: `${Math.max(4, p.score)}%`, "--d": `${300 + i * 90}ms` } as React.CSSProperties}
+                        style={{ width: Math.max(4, p.score) + "%", "--d": 300 + i * 90 + "ms" } as React.CSSProperties}
                       />
                     </div>
                   </li>
@@ -91,22 +94,36 @@ export function Finance() {
         </div>
 
         <div className="mt-6 flex justify-center">
-          <DemoBadge />
+          <DemoBadge label={d.demoBadge} />
         </div>
       </Shell>
     </Section>
   );
 }
 
-function Big({ label, value, tone, note }: { label: string; value: number; tone: string; note: string }) {
+function Big({
+  label,
+  value,
+  tone,
+  note,
+  unit,
+}: {
+  label: string;
+  value: number;
+  tone: string;
+  note: string;
+  unit: string;
+}) {
   return (
     <div className="bg-ink px-6 py-7">
       <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-snow-3">{label}</p>
-      <p className={`mt-3 text-[26px] font-semibold leading-none tracking-[-0.02em] sm:text-[32px] ${tone}`}>
-        <CountUp to={value}  />
+      <p
+        className={`mt-3 font-[family-name:var(--font-display)] text-[26px] font-bold leading-none tracking-[-0.02em] sm:text-[32px] ${tone}`}
+      >
+        <CountUp to={value} />
       </p>
       <p className="mt-2 text-[12px] text-snow-3">
-        so&apos;m · {note}
+        {unit} · {note}
       </p>
     </div>
   );

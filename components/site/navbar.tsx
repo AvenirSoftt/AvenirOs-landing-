@@ -2,18 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-import { Mark } from "@/components/site/mark";
+import { Logo } from "@/components/site/mark";
 import { LangSwitch } from "@/components/site/lang-switch";
 import { Button } from "@/components/ui/button";
 import { useSmooth } from "@/components/motion/smooth-scroll";
-
-const links = [
-  { href: "#mahsulot", label: "Mahsulot" },
-  { href: "#imkoniyatlar", label: "Imkoniyatlar" },
-  { href: "#modullar", label: "Modullar" },
-  { href: "#analitika", label: "Analitika" },
-  { href: "#faq", label: "FAQ" },
-];
+import type { Dict, Locale } from "@/lib/i18n";
 
 /**
  * Шапка: прозрачная на самом верху, тёмная со стеклом — после прокрутки.
@@ -21,9 +14,17 @@ const links = [
  * Порог в 24 пикселя, а не «больше нуля»: иначе шапка меняет вид от лёгкого
  * рывка страницы и мигает на каждом касании тачпада.
  */
-export function Navbar() {
+export function Navbar({ d, lang }: { d: Dict; lang: Locale }) {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const links = [
+    { href: "#mahsulot", label: d.nav.product },
+    { href: "#imkoniyatlar", label: d.nav.features },
+    { href: "#modullar", label: d.nav.modules },
+    { href: "#analitika", label: d.nav.analytics },
+    { href: "#faq", label: d.nav.faq },
+  ];
 
   useEffect(() => {
     const onScroll = () => setSolid(window.scrollY > 24);
@@ -56,13 +57,10 @@ export function Navbar() {
         className={`mx-auto flex max-w-[1200px] items-center gap-6 px-5 transition-[height] duration-300 sm:px-8 ${
           solid ? "h-14" : "h-[72px]"
         }`}
-        aria-label="Asosiy navigatsiya"
+        aria-label={d.nav.product}
       >
-        <a href="#" className="flex items-center gap-2.5 font-semibold tracking-tight text-snow">
-          <Mark size={28} />
-          <span className="text-[15px]">
-            Avenir<span className="text-primary-bright">OS</span>
-          </span>
+        <a href={`/${lang}`} aria-label={d.nav.home} className="shrink-0">
+          <Logo size={30} />
         </a>
 
         <ul className="ml-4 hidden items-center gap-1 lg:flex">
@@ -79,12 +77,12 @@ export function Navbar() {
         </ul>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          <LangSwitch />
+          <LangSwitch lang={lang} label={d.nav.langLabel} />
           {/* Оборачиваем, а не гасим классом: у кнопки в базе свой display,
               и `hidden` с ним спорит — на телефоне она всё равно вылезала. */}
           <span className="hidden sm:block">
             <Button href="#demo" size="md" className="!py-2">
-              Demo so&apos;rash
+              {d.nav.demo}
             </Button>
           </span>
           <button
@@ -93,7 +91,7 @@ export function Navbar() {
             className="grid h-9 w-9 place-items-center rounded-lg border border-line text-snow-2 lg:hidden"
             aria-expanded={open}
             aria-controls="mobil-menyu"
-            aria-label={open ? "Menyuni yopish" : "Menyuni ochish"}
+            aria-label={open ? d.nav.menuClose : d.nav.menuOpen}
           >
             <span className="relative block h-[9px] w-4">
               <i
@@ -134,7 +132,7 @@ export function Navbar() {
               onClick={() => setOpen(false)}
               className="block rounded-lg bg-primary px-4 py-3 text-center text-[15px] font-medium text-white"
             >
-              Demo so&apos;rash
+              {d.nav.demo}
             </a>
           </li>
         </ul>

@@ -21,7 +21,7 @@ import { chromium } from "playwright-core";
 
 const CHROME =
   process.env.CHROME_PATH || "C:/Program Files/Google/Chrome/Application/chrome.exe";
-const URL = process.env.URL || "http://localhost:3003";
+const URL = process.env.URL || "http://localhost:3003/uz";
 const OUT = process.env.OUT || ".qa";
 const args = process.argv.slice(2);
 const full = args.includes("--full");

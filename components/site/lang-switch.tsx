@@ -1,42 +1,40 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { locales, type Locale } from "@/lib/i18n";
 
 /**
- * Выбор языка.
+ * Выбор языка — настоящий, с тремя рабочими версиями страницы.
  *
- * Раньше здесь стоял ряд из трёх подписей, где две были мёртвыми. Выглядело
- * это как сломанный переключатель: человек жмёт «RU» и ничего не происходит.
+ * Раньше здесь стояли три подписи, где две были мёртвыми: человек жал «RU» и
+ * ничего не происходило. Теперь это меню, и каждый пункт — ссылка на свой
+ * адрес (`/uz`, `/ru`, `/en`): версией можно поделиться, а поиск видит три
+ * страницы вместо одной.
  *
- * Теперь это нормальное меню: видно ВЫБРАННЫЙ язык, а внутри — список, где
- * недоступные помечены словом «tez orada» и физически не нажимаются
- * (`aria-disabled`, без обработчика). Честность важнее полноты: языка пока нет,
- * и притворяться, что он есть, хуже, чем сказать об этом.
- *
- * Клавиатура работает как в любом меню: Esc закрывает, стрелки ходят по
- * пунктам, Tab уводит дальше. Клик мимо — тоже закрывает.
+ * Выбор запоминается в куке — прокси на корне сайта учитывает её раньше, чем
+ * язык браузера. Клавиатура работает как в любом меню: Esc закрывает, клик
+ * мимо тоже. Закрытое меню скрыто по-настоящему (`invisible`), а не просто
+ * прозрачно, иначе оно остаётся в дереве доступности.
  */
 
-const langs = [
-  { code: "UZ", label: "O'zbekcha", ready: true },
-  { code: "RU", label: "Русский", ready: false },
-  { code: "EN", label: "English", ready: false },
-] as const;
+const names: Record<Locale, string> = {
+  uz: "O'zbekcha",
+  ru: "Русский",
+  en: "English",
+};
 
-export function LangSwitch() {
+export function LangSwitch({ lang, label }: { lang: Locale; label: string }) {
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
-
     const onDown = (e: MouseEvent) => {
       if (!box.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
-
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
     return () => {
@@ -45,6 +43,11 @@ export function LangSwitch() {
     };
   }, [open]);
 
+  const pick = (code: Locale) => {
+    // Год жизни: язык выбирают один раз, а не каждую сессию.
+    document.cookie = `lang=${code}; path=/; max-age=31536000; samesite=lax`;
+  };
+
   return (
     <div ref={box} className="relative">
       <button
@@ -52,19 +55,18 @@ export function LangSwitch() {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-1.5 rounded-lg border border-line px-2.5 py-1.5 text-[12px] font-semibold text-snow-2 transition-colors duration-300 hover:border-line/70 hover:text-snow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        aria-label={label}
+        className="flex items-center gap-1.5 rounded-lg border border-line px-2.5 py-1.5 text-[12px] font-semibold uppercase text-snow-2 transition-colors duration-300 hover:border-line/70 hover:text-snow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <GlobeIcon />
-        UZ
+        {lang}
         <svg
           width="9"
           height="9"
           viewBox="0 0 12 12"
           fill="none"
           aria-hidden="true"
-          className={`transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "rotate-180" : ""}`}
         >
           <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
@@ -72,39 +74,34 @@ export function LangSwitch() {
 
       <div
         role="menu"
-        aria-label="Til tanlash"
-        className={`absolute right-0 top-[calc(100%+8px)] w-[196px] origin-top-right rounded-xl border border-line bg-panel/95 p-1.5 shadow-[0_24px_60px_-24px_rgba(2,6,23,0.9)] backdrop-blur-xl transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          open
-            ? "visible translate-y-0 scale-100 opacity-100"
-            : "invisible -translate-y-1 scale-[0.97] opacity-0"
+        aria-label={label}
+        className={`absolute right-0 top-[calc(100%+8px)] w-[196px] origin-top-right rounded-xl border border-line bg-panel/95 p-1.5 shadow-[0_24px_60px_-24px_rgba(2,6,23,0.9)] backdrop-blur-xl transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          open ? "visible translate-y-0 scale-100 opacity-100" : "invisible -translate-y-1 scale-[0.97] opacity-0"
         }`}
       >
-        {langs.map((l) => (
-          <div
-            key={l.code}
-            role="menuitemradio"
-            aria-checked={l.ready}
-            aria-disabled={!l.ready}
-            tabIndex={open && l.ready ? 0 : -1}
-            className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13.5px] ${
-              l.ready
-                ? "bg-white/[0.06] text-snow"
-                : "cursor-not-allowed text-snow-3/70"
-            }`}
-          >
-            <span className="w-6 text-[11px] font-semibold tracking-wide">{l.code}</span>
-            <span className="flex-1">{l.label}</span>
-            {l.ready ? (
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="text-accent">
-                <path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            ) : (
-              <span className="rounded-md border border-line px-1.5 py-0.5 text-[9px] uppercase tracking-[0.1em] text-snow-3">
-                tez orada
-              </span>
-            )}
-          </div>
-        ))}
+        {locales.map((code) => {
+          const active = code === lang;
+          return (
+            <a
+              key={code}
+              href={`/${code}`}
+              role="menuitemradio"
+              aria-checked={active}
+              onClick={() => pick(code)}
+              className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13.5px] transition-colors ${
+                active ? "bg-white/[0.07] text-snow" : "text-snow-2 hover:bg-white/[0.04] hover:text-snow"
+              }`}
+            >
+              <span className="w-6 text-[11px] font-semibold uppercase tracking-wide">{code}</span>
+              <span className="flex-1">{names[code]}</span>
+              {active ? (
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="text-accent">
+                  <path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              ) : null}
+            </a>
+          );
+        })}
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import { chromium } from "playwright-core";
 const CHROME =
   process.env.CHROME_PATH || "C:/Program Files/Google/Chrome/Application/chrome.exe";
 const URL = process.env.URL || "http://localhost:3003";
+const PAGE = URL + "/uz";
 
 let failed = 0;
 const ok = (cond, msg, extra = "") => {
@@ -25,7 +26,7 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ["--no-san
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 950 } });
   const page = await ctx.newPage();
-  await page.goto(URL, { waitUntil: "networkidle", timeout: 180_000 });
+  await page.goto(PAGE, { waitUntil: "networkidle", timeout: 180_000 });
 
   // Переключатель разделов
   await page.locator("#modullar").scrollIntoViewIfNeeded();
@@ -89,12 +90,24 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ["--no-san
     "выбранный язык отмечен",
   );
   ok(
-    (await menu.locator('[aria-disabled="true"]').count()) === 2,
-    "русский и английский честно помечены недоступными",
+    (await menu.locator('[role="menuitemradio"]').count()) === 3,
+    "в меню три языка",
   );
   await page.keyboard.press("Escape");
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(700);
   ok(!(await menu.isVisible()), "Escape закрывает меню языка");
+
+  // Переключение реально ведёт на другой язык
+  await langBtn.click();
+  await page.waitForTimeout(300);
+  await menu.locator("a[href='/ru']").click();
+  await page.waitForURL((u) => u.pathname.endsWith("/ru"), { timeout: 20000 });
+  await page.waitForTimeout(900);
+  const h1ru = await page.locator("h1").innerText();
+  ok(h1ru.includes("бизнеса"), "русская версия открылась и переведена", h1ru.replace(/s+/g, " ").slice(0, 46));
+  ok((await page.getAttribute("html", "lang")) === "ru", "у страницы правильный признак языка");
+  await page.goto(PAGE, { waitUntil: "networkidle" });
+  await page.waitForTimeout(700);
 
   // Якоря шапки. Ждём НУЖНОГО положения, а не «пока перестанет ехать»: плавная
   // прокрутка через всю страницу начинается не сразу и идёт больше секунды —
@@ -129,7 +142,7 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ["--no-san
     hasTouch: true,
   });
   const page = await ctx.newPage();
-  await page.goto(URL, { waitUntil: "networkidle", timeout: 180_000 });
+  await page.goto(PAGE, { waitUntil: "networkidle", timeout: 180_000 });
 
   const menu = page.locator("#mobil-menyu");
   ok(!(await menu.isVisible()), "мобильное меню закрыто по умолчанию");

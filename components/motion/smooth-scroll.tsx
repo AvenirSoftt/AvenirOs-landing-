@@ -26,6 +26,9 @@ gsap.registerPlugin(ScrollTrigger);
  * движение, от которого людям с вестибулярной чувствительностью плохо.
  */
 
+/** Высота липкой шапки: на неё смещаются все переходы по якорям. */
+const HEADER = 88;
+
 type Ctl = { stop: () => void; start: () => void };
 
 const SmoothCtx = createContext<Ctl>({ stop: () => {}, start: () => {} });
@@ -55,6 +58,29 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     gsap.ticker.lagSmoothing(0);
     ScrollTrigger.refresh();
 
+    // Доводка после перехода по якорю.
+    //
+    // Замер показал вот что: высота документа и абсолютное положение цели за
+    // время прокрутки не меняются, но реальный `scrollY` останавливается на
+    // ~96px раньше, чем считает Lenis. То есть расходятся не страница с целью,
+    // а внутреннее состояние Lenis с настоящей прокруткой — и обычный повторный
+    // `scrollTo(цель)` оказывается пустышкой: Lenis уверен, что уже приехал.
+    //
+    // Поэтому сначала внутреннее состояние принудительно приравнивается к
+    // реальному положению (`immediate` заодно делает настоящий scrollTo), и
+    // только потом доезжаем коротким движением. Проверка повторяется несколько
+    // раз с паузой: сдвиг случается уже после остановки.
+    const settle = (target: HTMLElement, tries = 0) => {
+      const delta = Math.round(target.getBoundingClientRect().top - HEADER);
+      if (Math.abs(delta) <= 2 || tries >= 4) return;
+      lenis.scrollTo(window.scrollY, { immediate: true, force: true });
+      lenis.scrollTo(window.scrollY + delta, {
+        duration: 0.35,
+        force: true,
+        onComplete: () => window.setTimeout(() => settle(target, tries + 1), 140),
+      });
+    };
+
     // Якоря ведёт Lenis: иначе браузер прыгает мгновенно и инерция теряется.
     // Отступ — под липкую шапку.
     const onClick = (e: MouseEvent) => {
@@ -66,10 +92,15 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
         lenis.scrollTo(0, { duration: 1.2 });
         return;
       }
-      const target = document.querySelector(href);
+      const target = document.querySelector<HTMLElement>(href);
       if (!target) return;
       e.preventDefault();
-      lenis.scrollTo(target as HTMLElement, { offset: -88, duration: 1.3 });
+
+      lenis.scrollTo(target, {
+        offset: -HEADER,
+        duration: 1.3,
+        onComplete: () => window.setTimeout(() => settle(target), 80),
+      });
     };
 
     document.addEventListener("click", onClick);

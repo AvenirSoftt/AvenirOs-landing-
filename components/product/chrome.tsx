@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { Dict } from "@/lib/i18n";
 
 /**
  * Рамка окна продукта: то, во что «вставлены» все макеты интерфейса.
@@ -16,7 +17,7 @@ export function Chrome({
   title: string;
   children: ReactNode;
   className?: string;
-  tabs?: string[];
+  tabs?: readonly string[];
 }) {
   return (
     <div className={`panel overflow-hidden rounded-2xl ${className}`}>
@@ -48,19 +49,20 @@ export function Chrome({
 }
 
 /** Боковое меню продукта — узнаваемая часть интерфейса, но только как фон. */
-export function Rail({ active = "Obzor" }: { active?: string }) {
-  const items = [
-    { g: "Ish" },
-    { i: "Obzor" },
-    { i: "Vazifalar" },
-    { i: "Loyihalar" },
-    { i: "CRM" },
-    { i: "Kontent reja" },
-    { g: "Analitika" },
-    { i: "Moliya" },
-    { i: "Hisobotlar" },
-    { i: "Jamoa" },
-    { i: "AI assistent" },
+export function Rail({ ui }: { ui: Dict["ui"] }) {
+  // Порядок такой же, как в системе: работа сверху, аналитика ниже.
+  const items: { g?: string; i?: string }[] = [
+    { g: ui.railGroups[0] },
+    { i: ui.rail[0] },
+    { i: ui.rail[1] },
+    { i: ui.rail[2] },
+    { i: ui.rail[3] },
+    { i: ui.rail[4] },
+    { g: ui.railGroups[1] },
+    { i: ui.rail[5] },
+    { i: ui.rail[6] },
+    { i: ui.rail[7] },
+    { i: ui.rail[8] },
   ];
 
   return (
@@ -86,14 +88,12 @@ export function Rail({ active = "Obzor" }: { active?: string }) {
             <li key={it.i}>
               <span
                 className={`flex items-center gap-2 rounded-lg px-2 py-1.5 text-[11.5px] ${
-                  it.i === active
-                    ? "bg-primary/15 font-medium text-primary-bright"
-                    : "text-snow-2/80"
+                  it.i === ui.rail[0] ? "bg-primary/15 font-medium text-primary-bright" : "text-snow-2/80"
                 }`}
               >
                 <i
                   className={`h-1.5 w-1.5 rounded-[3px] ${
-                    it.i === active ? "bg-primary-bright" : "bg-snow-3/40"
+                    it.i === ui.rail[0] ? "bg-primary-bright" : "bg-snow-3/40"
                   }`}
                 />
                 {it.i}

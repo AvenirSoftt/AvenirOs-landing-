@@ -1,17 +1,19 @@
 import { Chrome } from "@/components/product/chrome";
 import { monthly } from "@/lib/demo";
+import type { Dict } from "@/lib/i18n";
 
-/** Финансы: P&L строками и кэш-флоу столбиками — раздел «Moliya». */
-export function FinanceMockup() {
+/** Финансы: P&L строками и кэш-флоу столбиками — раздел «Финансы». */
+export function FinanceMockup({ d }: { d: Dict }) {
+  const ui = d.ui;
   const rows = [
-    { label: "Tushum", value: "3.480.000.000", tone: "text-success", w: 100 },
-    { label: "Xizmat tannarxi", value: "1.902.000.000", tone: "text-snow-2", w: 55 },
-    { label: "Operatsion xarajat", value: "1.001.453.955", tone: "text-snow-2", w: 29 },
-    { label: "Foyda", value: "576.546.045", tone: "text-success", w: 17 },
+    { label: ui.plRows[0], value: "3.480.000.000", tone: "text-success", w: 100, bar: "bg-primary-bright" },
+    { label: ui.plRows[1], value: "1.902.000.000", tone: "text-snow-2", w: 55, bar: "bg-[#2f4258]" },
+    { label: ui.plRows[2], value: "1.001.453.955", tone: "text-snow-2", w: 29, bar: "bg-[#2f4258]" },
+    { label: ui.plRows[3], value: "576.546.045", tone: "text-success", w: 17, bar: "bg-success" },
   ];
 
   return (
-    <Chrome title="AvenirOS — Moliya · P&L" tabs={["P&L", "Kesh-flou", "Hisob-fakturalar"]}>
+    <Chrome title={ui.financeTitle} tabs={ui.financeTabs}>
       <div className="p-4">
         <div className="space-y-2.5">
           {rows.map((r, i) => (
@@ -22,9 +24,7 @@ export function FinanceMockup() {
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-[#1e2a3a]">
                 <span
-                  className={`grow-x block h-full rounded-full ${
-                    r.label === "Foyda" ? "bg-success" : r.label === "Tushum" ? "bg-primary-bright" : "bg-[#2f4258]"
-                  }`}
+                  className={`grow-x block h-full rounded-full ${r.bar}`}
                   style={{ width: `${r.w}%`, "--d": `${120 + i * 110}ms` } as React.CSSProperties}
                 />
               </div>
@@ -34,8 +34,8 @@ export function FinanceMockup() {
 
         <div className="mt-5 border-t border-line-soft pt-4">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[12px] font-semibold text-snow">6 oylik kesh-flou</p>
-            <p className="text-[10.5px] text-snow-3">Tushum · Xarajat · Foyda</p>
+            <p className="text-[12px] font-semibold text-snow">{ui.cashflow}</p>
+            <p className="text-[10.5px] text-snow-3">{ui.cashflowLegend}</p>
           </div>
           <div className="flex h-[112px] items-end gap-2.5">
             {monthly.slice(6).map((m, i) => (
@@ -47,14 +47,19 @@ export function FinanceMockup() {
                   />
                   <i
                     className="grow-y w-[30%] rounded-t bg-[#2f4258]"
-                    style={{ height: `${((m.revenue - m.profit) / 500) * 100}%`, "--d": `${i * 70 + 40}ms` } as React.CSSProperties}
+                    style={
+                      {
+                        height: `${((m.revenue - m.profit) / 500) * 100}%`,
+                        "--d": `${i * 70 + 40}ms`,
+                      } as React.CSSProperties
+                    }
                   />
                   <i
                     className="grow-y w-[30%] rounded-t bg-success/85"
                     style={{ height: `${(m.profit / 500) * 100}%`, "--d": `${i * 70 + 80}ms` } as React.CSSProperties}
                   />
                 </span>
-                <span className="text-[9.5px] text-snow-3">{m.m}</span>
+                <span className="text-[9.5px] text-snow-3">{ui.months[m.m]}</span>
               </div>
             ))}
           </div>
@@ -65,30 +70,27 @@ export function FinanceMockup() {
 }
 
 /** Аналитика: витрина показателей руководителя. */
-export function AnalyticsMockup() {
-  const kpis = [
-    { label: "Tushum trendi", value: "+18,4%", tone: "text-success", sub: "12 oy" },
-    { label: "Konversiya", value: "66,67%", tone: "text-primary-bright", sub: "lid → bitim" },
-    { label: "O'rtacha chek", value: "87 mln", tone: "text-snow", sub: "so'm" },
-    { label: "Jamoa yuklamasi", value: "81%", tone: "text-warning", sub: "o'rtacha" },
-  ];
+export function AnalyticsMockup({ d }: { d: Dict }) {
+  const ui = d.ui;
+  const values = ["+18,4%", "66,67%", "87 mln", "81%"];
+  const tones = ["text-success", "text-primary-bright", "text-snow", "text-warning"];
 
   return (
-    <Chrome title="AvenirOS — Hisobotlar" tabs={["Umumiy", "Sotuv", "Moliya"]}>
+    <Chrome title={ui.reportsTitle} tabs={ui.reportsTabs}>
       <div className="p-4">
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-          {kpis.map((k) => (
-            <div key={k.label} className="rounded-lg border border-line-soft bg-[#141d29] px-3 py-2.5">
-              <p className="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-snow-3">{k.label}</p>
-              <p className={`mt-1 text-[16px] font-semibold tabular ${k.tone}`}>{k.value}</p>
-              <p className="text-[10px] text-snow-3">{k.sub}</p>
+          {ui.kpis.map(([label, sub], i) => (
+            <div key={label} className="rounded-lg border border-line-soft bg-[#141d29] px-3 py-2.5">
+              <p className="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-snow-3">{label}</p>
+              <p className={`mt-1 text-[16px] font-semibold tabular ${tones[i]}`}>{values[i]}</p>
+              <p className="text-[10px] text-snow-3">{sub}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-3 grid gap-3 lg:grid-cols-[1.5fr_1fr]">
           <div className="rounded-lg border border-line-soft bg-[#141d29] p-3.5">
-            <p className="mb-3 text-[12px] font-semibold text-snow">Tushum va foyda · 12 oy</p>
+            <p className="mb-3 text-[12px] font-semibold text-snow">{ui.revenueProfit}</p>
             <div className="flex h-[128px] items-end gap-1.5">
               {monthly.map((m, i) => (
                 <div key={m.m} className="flex flex-1 flex-col items-center gap-1">
@@ -102,25 +104,25 @@ export function AnalyticsMockup() {
                       style={{ height: `${(m.profit / 500) * 100}%`, "--d": `${i * 55 + 90}ms` } as React.CSSProperties}
                     />
                   </span>
-                  <span className="text-[8.5px] text-snow-3/80">{m.m}</span>
+                  <span className="text-[8.5px] text-snow-3/80">{ui.months[m.m]}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="rounded-lg border border-line-soft bg-[#141d29] p-3.5">
-            <p className="mb-3 text-[12px] font-semibold text-snow">Voronka bosqichlari</p>
+            <p className="mb-3 text-[12px] font-semibold text-snow">{ui.funnelStages}</p>
             <ul className="space-y-2.5">
               {[
-                { s: "Yangi", n: 16, w: 100 },
-                { s: "Kvalifikatsiya", n: 10, w: 62 },
-                { s: "Diagnostika", n: 6, w: 38 },
-                { s: "Taklif", n: 4, w: 25 },
-                { s: "Muzokara", n: 3, w: 19 },
+                { n: 16, w: 100 },
+                { n: 10, w: 62 },
+                { n: 6, w: 38 },
+                { n: 4, w: 25 },
+                { n: 3, w: 19 },
               ].map((r, i) => (
-                <li key={r.s}>
+                <li key={ui.stages[i]}>
                   <div className="mb-1 flex items-baseline justify-between text-[11px]">
-                    <span className="text-snow-2">{r.s}</span>
+                    <span className="text-snow-2">{ui.stages[i]}</span>
                     <span className="font-semibold text-snow tabular">{r.n}</span>
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-[#1e2a3a]">

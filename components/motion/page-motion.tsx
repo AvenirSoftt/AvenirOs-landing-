@@ -27,6 +27,23 @@ gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
  * Кривые везде свои (`expo.out`, `power4.out`, `none` для scrub): браузерные
  * `ease`/`linear` читаются как «движение не настраивали».
  */
+/**
+ * Построчная разбивка заголовка с обрезкой — и снятием обрезки после приезда.
+ *
+ * `mask: "lines"` заворачивает каждую строку в обёртку с `overflow: clip`:
+ * без неё строка выезжает «из ниоткуда», а не из-под предыдущей. Но та же
+ * обрезка режет выносные элементы букв — у «g», «j», «y» отрезает хвосты, и на
+ * заголовке в 100+ пикселей это первое, что бросается в глаза. Обрезка нужна
+ * ровно на время движения, поэтому по окончании она снимается.
+ */
+function splitLines(el: HTMLElement) {
+  const split = SplitText.create(el, { type: "lines", mask: "lines" });
+  const masks =
+    (split as unknown as { masks?: Element[] }).masks ??
+    split.lines.map((l) => (l as HTMLElement).parentElement).filter(Boolean);
+  return { lines: split.lines, unmask: () => gsap.set(masks as Element[], { overflow: "visible" }) };
+}
+
 export function PageMotion() {
   const scope = useRef<HTMLDivElement>(null);
 
@@ -42,10 +59,8 @@ export function PageMotion() {
       if (heroTitle) {
         // Разбивка на СТРОКИ, а не на буквы: побуквенная россыпь на длинном
         // узбекском заголовке читается как аттракцион, а не как продукт.
-        // `mask: "lines"` сам заворачивает строку в обрезающую обёртку —
-        // без неё строка выезжает «из ниоткуда», а не из-под предыдущей.
-        const split = SplitText.create(heroTitle, { type: "lines", mask: "lines" });
-        tl.from(split.lines, { yPercent: 120, duration: 1.15, stagger: 0.09 });
+        const { lines, unmask } = splitLines(heroTitle);
+        tl.from(lines, { yPercent: 120, duration: 1.15, stagger: 0.09, onComplete: unmask });
       }
 
       tl.from("[data-hero-eyebrow]", { y: 14, opacity: 0, duration: 0.7 }, 0.05)
@@ -84,12 +99,13 @@ export function PageMotion() {
 
       // ── Заголовки секций: построчный выезд из-под маски ──────────────────
       gsap.utils.toArray<HTMLElement>("[data-split]").forEach((el) => {
-        const split = SplitText.create(el, { type: "lines", mask: "lines" });
-        gsap.from(split.lines, {
+        const { lines, unmask } = splitLines(el);
+        gsap.from(lines, {
           yPercent: 115,
           duration: 1,
           ease: "expo.out",
           stagger: 0.08,
+          onComplete: unmask,
           scrollTrigger: { trigger: el, start: "top 88%", once: true },
         });
       });

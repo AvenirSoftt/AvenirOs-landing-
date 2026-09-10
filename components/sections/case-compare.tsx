@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHead, Shell } from "@/components/ui/section";
+import type { Dict } from "@/lib/i18n";
 
 /**
  * Кейс.
@@ -10,48 +11,45 @@ import { Section, SectionHead, Shell } from "@/components/ui/section";
  * собственного агентства и используется каждый день. Никаких «-40% времени» и
  * прочих цифр эффекта: их никто не измерял, а придумывать нельзя.
  */
-export function CaseStudy() {
+export function CaseStudy({ d }: { d: Dict }) {
   return (
     <Section tone="dark">
       <Shell>
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
             <SectionHead
-              eyebrow="Keys"
+              eyebrow={d.caseStudy.eyebrow}
               title={
                 <>
-                  Avenir OS&nbsp;— <span className="text-snow-3">o&apos;zimiz uchun qilingan tizim</span>
+                  {d.caseStudy.title} <span className="text-snow-3">{d.caseStudy.titleMuted}</span>
                 </>
               }
-              lead="Bu mahsulot marketing agentligi uchun ishlab chiqilgan va o'sha yerda har kuni ishlatiladi. Shuning uchun u ko'rgazma uchun emas, haqiqiy jarayonga moslashgan."
+              lead={d.caseStudy.lead}
             />
             <Reveal delay={90} className="mt-8">
               <Button href="https://avenir.uz/portfolio/avenir-os" variant="ghost" size="md">
-                Keysni to&apos;liq o&apos;qish
-                <span aria-hidden="true" className="relative">↗</span>
+                {d.caseStudy.cta}
+                <span aria-hidden="true" className="relative">
+                  ↗
+                </span>
               </Button>
             </Reveal>
           </div>
 
-          <div data-stagger className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line">
-            {[
-              { v: "16", l: "tizim bo'limi" },
-              { v: "7", l: "foydalanuvchi roli" },
-              { v: "2026", l: "ishga tushgan yil" },
-              { v: "Har kuni", l: "ichki foydalanish" },
-            ].map((s) => (
-              <div key={s.l} className="lift bg-panel px-5 py-6 hover:bg-panel-2">
-                <p className="text-[26px] font-semibold tracking-[-0.02em] text-snow sm:text-[30px]">
-                  {s.v}
+          <div
+            data-stagger
+            className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line"
+          >
+            {d.caseStudy.stats.map(([v, l]) => (
+              <div key={l} className="lift bg-panel px-5 py-6 hover:bg-panel-2">
+                <p className="font-[family-name:var(--font-display)] text-[26px] font-bold tracking-[-0.02em] text-snow sm:text-[30px]">
+                  {v}
                 </p>
-                <p className="mt-1 text-[12.5px] text-snow-3">{s.l}</p>
+                <p className="mt-1 text-[12.5px] text-snow-3">{l}</p>
               </div>
             ))}
             <div className="col-span-2 bg-panel px-5 py-5">
-              <p className="text-[12.5px] leading-relaxed text-snow-2">
-                Texnologiyalar: Next.js, React, TypeScript, FastAPI, PostgreSQL, Redis, MinIO,
-                Docker.
-              </p>
+              <p className="text-[12.5px] leading-relaxed text-snow-2">{d.caseStudy.tech}</p>
             </div>
           </div>
         </div>
@@ -60,42 +58,19 @@ export function CaseStudy() {
   );
 }
 
-const without = [
-  "Excel jadvallari",
-  "Telegramdagi kelishuvlar",
-  "Alohida CRM",
-  "Alohida buxgalteriya",
-  "Qo'lda yig'iladigan hisobot",
-  "Tarqoq ma'lumot",
-];
-
-const withOs = [
-  "Bitta tizim",
-  "Bog'langan jarayonlar",
-  "Real vaqtdagi analitika",
-  "Markazlashgan ma'lumot",
-  "Aniq mas'uliyat",
-  "Yagona operatsion muhit",
-];
-
-export function Comparison() {
+export function Comparison({ d }: { d: Dict }) {
   return (
     <Section tone="light">
       <Shell>
-        <SectionHead
-          tone="light"
-          align="center"
-          eyebrow="Taqqoslash"
-          title={<>Farq bitta narsada: ma&apos;lumot bog&apos;langanmi</>}
-        />
+        <SectionHead tone="light" align="center" eyebrow={d.compare.eyebrow} title={d.compare.title} />
 
         <div className="mx-auto mt-12 grid max-w-[900px] gap-4 sm:grid-cols-2 sm:gap-6">
           <Reveal className="rounded-2xl border border-hairline bg-paper-2/60 p-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-3">
-              AvenirOS&apos;siz
+              {d.compare.withoutLabel}
             </p>
             <ul data-stagger className="mt-5 space-y-3">
-              {without.map((w) => (
+              {d.compare.without.map((w) => (
                 <li key={w} className="flex items-start gap-3 text-[14.5px] text-ink-2">
                   <span className="mt-[7px] h-px w-3 shrink-0 bg-ink-3" aria-hidden="true" />
                   {w}
@@ -106,14 +81,20 @@ export function Comparison() {
 
           <Reveal delay={90} className="rounded-2xl border border-primary/25 bg-ink p-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary-bright">
-              AvenirOS bilan
+              {d.compare.withLabel}
             </p>
             <ul data-stagger className="mt-5 space-y-3">
-              {withOs.map((w) => (
+              {d.compare.with.map((w) => (
                 <li key={w} className="flex items-start gap-3 text-[14.5px] text-snow">
                   <span className="mt-[3px] shrink-0 text-success" aria-hidden="true">
                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-                      <path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M3 8.5 6.3 12 13 4.5"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </span>
                   {w}

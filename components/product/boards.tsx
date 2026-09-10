@@ -1,17 +1,18 @@
 import { Chrome } from "@/components/product/chrome";
 import { projects, team } from "@/lib/demo";
+import type { Dict } from "@/lib/i18n";
 
-/** Доска проектов: прогресс, срок, бюджет и ответственный — как в разделе «Loyihalar». */
-export function ProjectsMockup() {
+/** Доска проектов: прогресс, срок, бюджет и ответственный — раздел «Проекты». */
+export function ProjectsMockup({ d }: { d: Dict }) {
+  const ui = d.ui;
+
   return (
-    <Chrome title="AvenirOS — Loyihalar" tabs={["Ro'yxat", "Kanban", "Gantt"]}>
+    <Chrome title={ui.projectsTitle} tabs={ui.projectsTabs}>
       <div className="divide-y divide-line-soft">
         <div className="hidden grid-cols-[1.6fr_1fr_0.9fr_0.8fr_0.6fr] gap-3 px-4 py-2.5 text-[9.5px] font-semibold uppercase tracking-[0.13em] text-snow-3 sm:grid">
-          <span>Loyiha</span>
-          <span>Bajarilishi</span>
-          <span>Byudjet</span>
-          <span>Muddat</span>
-          <span>Vazifalar</span>
+          {ui.projectCols.map((c) => (
+            <span key={c}>{c}</span>
+          ))}
         </div>
 
         {projects.map((p, i) => (
@@ -25,7 +26,7 @@ export function ProjectsMockup() {
               </span>
               <div className="min-w-0">
                 <p className="truncate text-[12.5px] font-semibold text-snow">{p.name}</p>
-                <p className="truncate text-[10.5px] text-snow-3">{p.client}</p>
+                <p className="truncate text-[10.5px] text-snow-3">{ui.projectKinds[p.kind]}</p>
               </div>
             </div>
 
@@ -38,7 +39,9 @@ export function ProjectsMockup() {
                   style={{ width: `${p.progress}%`, "--d": `${150 + i * 110}ms` } as React.CSSProperties}
                 />
               </span>
-              <span className="w-9 text-right text-[11px] font-semibold text-snow-2 tabular">{p.progress}%</span>
+              <span className="w-9 text-right text-[11px] font-semibold text-snow-2 tabular">
+                {p.progress}%
+              </span>
             </div>
 
             <span className="hidden text-[11.5px] text-snow-2 tabular sm:block">{p.budget}</span>
@@ -52,16 +55,18 @@ export function ProjectsMockup() {
 }
 
 /** Загрузка команды: кто чем занят прямо сейчас. */
-export function TeamMockup() {
+export function TeamMockup({ d }: { d: Dict }) {
+  const ui = d.ui;
+
   return (
-    <Chrome title="AvenirOS — Jamoa yuklamasi">
+    <Chrome title={ui.teamTitle}>
       <div className="space-y-3 p-4">
         {team.map((m, i) => (
           <div key={m.name}>
             <div className="mb-1.5 flex items-baseline justify-between gap-3">
               <span className="min-w-0 truncate text-[12.5px] font-medium text-snow">
                 {m.name}
-                <span className="ml-2 text-[10.5px] font-normal text-snow-3">{m.role}</span>
+                <span className="ml-2 text-[10.5px] font-normal text-snow-3">{ui.roles[m.role]}</span>
               </span>
               <span
                 className={`shrink-0 text-[12px] font-semibold tabular ${
@@ -79,9 +84,7 @@ export function TeamMockup() {
                 style={{ width: `${m.load}%`, "--d": `${150 + i * 120}ms` } as React.CSSProperties}
               />
             </div>
-            <p className="mt-1 text-[10.5px] text-snow-3">
-              {m.tasks} ta vazifa · {m.projects} ta loyiha
-            </p>
+            <p className="mt-1 text-[10.5px] text-snow-3">{ui.teamNote.replace("{tasks}", String(m.tasks)).replace("{projects}", String(m.projects))}</p>
           </div>
         ))}
       </div>

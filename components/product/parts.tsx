@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { Dict } from "@/lib/i18n";
 
 /**
  * Мелкие детали интерфейса AvenirOS: карточка показателя, спарклайн, кольцо
@@ -40,7 +41,7 @@ export function CardLabel({ children, icon }: { children: ReactNode; icon?: Tone
   );
 }
 
-/** Спарклайн под числом — как в карточках «Tushum / Xarajat / Foyda». */
+/** Спарклайн под числом — как в карточках «Выручка / Расходы / Прибыль». */
 export function Spark({
   points,
   color,
@@ -97,8 +98,8 @@ export function HealthRing({ score, size = 132 }: { score: number; size?: number
     <div className="relative grid place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90" aria-hidden="true">
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#223143" strokeWidth="9" />
-        {/* Дуга дорисовывается до значения: 45/100 читается как движение,
-            а не как статичная картинка. Дасharray держит длину дуги, поэтому
+        {/* Дуга дорисовывается до значения: 45/100 читается как движение, а не
+            как статичная картинка. Дасharray держит длину дуги, поэтому
             анимируется только смещение. */}
         <circle
           className="draw-arc"
@@ -121,7 +122,7 @@ export function HealthRing({ score, size = 132 }: { score: number; size?: number
   );
 }
 
-/** Полоса «Reja/fakt»: факт, цель и засечка прогноза. */
+/** Полоса «План/факт»: факт, цель и засечка прогноза. */
 export function PlanBar({
   label,
   value,
@@ -130,6 +131,7 @@ export function PlanBar({
   forecast,
   t,
   delay = 0,
+  ui,
 }: {
   label: string;
   value: number;
@@ -138,6 +140,7 @@ export function PlanBar({
   forecast: string;
   t: Tone;
   delay?: number;
+  ui: Dict["ui"];
 }) {
   return (
     <div>
@@ -156,27 +159,27 @@ export function PlanBar({
       </div>
       <p className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[10.5px] text-snow-3">
         <span>
-          Fakt <b className="font-semibold text-snow-2">{fact}</b>
+          {ui.fact} <b className="font-semibold text-snow-2">{fact}</b>
         </span>
         <span>
-          Maqsad <b className="font-semibold text-snow-2">{target}</b>
+          {ui.target} <b className="font-semibold text-snow-2">{target}</b>
         </span>
         <span className="hidden sm:inline">
-          Prognoz <b className="font-semibold text-snow-2">{forecast}</b>
+          {ui.forecast} <b className="font-semibold text-snow-2">{forecast}</b>
         </span>
       </p>
     </div>
   );
 }
 
-/** Подпись «demo ma'lumot» — обязательна везде, где показаны числа. */
-export function DemoBadge({ className = "" }: { className?: string }) {
+/** Подпись «демо-данные» — обязательна везде, где показаны числа. */
+export function DemoBadge({ label, className = "" }: { label: string; className?: string }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-snow-3 ${className}`}
     >
       <i className="h-1.5 w-1.5 rounded-full bg-warning" aria-hidden="true" />
-      Demo ma&apos;lumot
+      {label}
     </span>
   );
 }

@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHead, Shell } from "@/components/ui/section";
+import type { Dict } from "@/lib/i18n";
 
 /**
  * Проблема — светлая секция и первый перелом ритма после тёмного начала.
@@ -8,48 +9,30 @@ import { Section, SectionHead, Shell } from "@/components/ui/section";
  * AvenirOS (avenir.uz/portfolio/avenir-os) — задачи в трекере, бюджет в
  * таблице, договорённость в чате, контент-план в отдельном файле.
  */
-
-const scattered = [
-  { name: "Excel", note: "byudjet va hisob-kitob" },
-  { name: "Telegram", note: "mijoz bilan kelishuv" },
-  { name: "CRM", note: "lidlar alohida" },
-  { name: "Buxgalteriya", note: "to'lovlar alohida" },
-  { name: "Trekker", note: "vazifalar alohida" },
-  { name: "Hisobotlar", note: "qo'lda yig'iladi" },
-];
-
-const pains = [
-  "Ma'lumotlar turli joyda saqlanadi.",
-  "Hisobotlar oy oxirida qo'lda yig'iladi.",
-  "Sotuv va moliya bir-biridan uzilgan.",
-  "Jamoa vazifalari nazoratsiz qoladi.",
-  "Rahbar real holatni kech ko'radi.",
-];
-
-export function Problem() {
+export function Problem({ d }: { d: Dict }) {
   return (
     <Section id="imkoniyatlar" tone="light">
       <div className="grid-lines-light pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(65%_60%_at_50%_50%,#000,transparent_100%)]" />
       <Shell className="relative">
         <SectionHead
           tone="light"
-          eyebrow="Muammo"
-          title={<>Biznes o&apos;sgani sari tizimlar ko&apos;payadi.</>}
-          lead="Har biri o'z joyida ishlaydi, lekin bir-biri bilan gaplashmaydi. Natijada bir xil ma'lumot uch marta kiritiladi, hisobot qo'lda yig'iladi, rahbar esa holatni oy tugagach ko'radi."
+          eyebrow={d.problem.eyebrow}
+          title={d.problem.title}
+          lead={d.problem.lead}
         />
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           {/* Разрозненные инструменты: карточки намеренно «косые» и без связи */}
           <Reveal className="relative">
             <div data-stagger className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {scattered.map((s, i) => (
+              {d.problem.tools.map(([name, note], i) => (
                 <div
-                  key={s.name}
+                  key={name}
                   className="lift rounded-xl border border-hairline bg-card px-3.5 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:border-ink-3/40 hover:shadow-[0_10px_24px_-12px_rgba(15,23,42,0.25)]"
-                  style={{ transform: `rotate(${(i % 3) - 1}deg)` }}
+                  style={{ transform: "rotate(" + ((i % 3) - 1) + "deg)" }}
                 >
-                  <p className="text-[13px] font-semibold text-ink-1">{s.name}</p>
-                  <p className="mt-0.5 text-[11.5px] leading-snug text-ink-3">{s.note}</p>
+                  <p className="text-[13px] font-semibold text-ink-1">{name}</p>
+                  <p className="mt-0.5 text-[11.5px] leading-snug text-ink-3">{note}</p>
                 </div>
               ))}
             </div>
@@ -57,7 +40,7 @@ export function Problem() {
             <div className="mt-8 flex items-center gap-3">
               <span className="h-px flex-1 bg-hairline" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-3">
-                bog&apos;lanmagan
+                {d.problem.divider}
               </span>
               <span className="h-px flex-1 bg-hairline" />
             </div>
@@ -67,16 +50,14 @@ export function Problem() {
                 AvenirOS
               </p>
               <p className="mt-2 text-[17px] font-medium text-snow sm:text-[19px]">
-                Bitta ma&apos;lumotlar muhiti
+                {d.problem.unifiedTitle}
               </p>
-              <p className="mt-1.5 text-[13px] text-snow-2">
-                Har bir vazifa loyihaga, har bir loyiha mijoz va pulga bog&apos;langan.
-              </p>
+              <p className="mt-1.5 text-[13px] text-snow-2">{d.problem.unifiedLead}</p>
             </div>
           </Reveal>
 
           <ul data-stagger className="space-y-0 self-center">
-            {pains.map((p, i) => (
+            {d.problem.pains.map((p, i) => (
               <li
                 key={p}
                 className="flex items-start gap-4 border-b border-hairline py-4 first:border-t"

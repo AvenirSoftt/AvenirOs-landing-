@@ -5,28 +5,31 @@ import { Chrome, Rail } from "@/components/product/chrome";
 import { YearChart } from "@/components/product/year-chart";
 import { Card, CardLabel, HealthRing, PlanBar, Spark, tone } from "@/components/product/parts";
 import { finance, health, planFact } from "@/lib/demo";
+import type { Dict } from "@/lib/i18n";
 
 /**
  * Главный экран AvenirOS — «Дашборд агентства», собранный заново.
  *
  * Это не скриншот в рамке: разметка повторяет реальный экран (кольцо здоровья,
- * шесть карточек, реja/факт, годовая динамика), но живёт как обычная вёрстка —
+ * шесть карточек, план/факт, годовая динамика), но живёт как обычная вёрстка —
  * поэтому текст остаётся текстом, числа считаются на глазах, а на телефоне
  * блок перестраивается, а не мылится.
  */
-export function DashboardMockup({ compact = false }: { compact?: boolean }) {
+export function DashboardMockup({ d, compact = false }: { d: Dict; compact?: boolean }) {
+  const ui = d.ui;
+
   return (
-    <Chrome title="AvenirOS — Agentlik paneli" tabs={["Oy", "Chorak", "Yil"]}>
+    <Chrome title={ui.dashboardTitle} tabs={[ui.tabs.month, ui.tabs.quarter, ui.tabs.year]}>
       <div className="flex">
-        <Rail active="Obzor" />
+        <Rail ui={ui} />
         <div className="min-w-0 flex-1 p-3.5 sm:p-5">
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <p className="text-[15px] font-semibold text-snow sm:text-[17px]">Agentlik paneli</p>
-              <p className="text-[11px] text-snow-3">2026-09-01 — 2026-09-30</p>
+              <p className="text-[15px] font-semibold text-snow sm:text-[17px]">{ui.dashboard}</p>
+              <p className="text-[11px] text-snow-3">{ui.period}</p>
             </div>
             <span className="hidden rounded-lg border border-line px-2.5 py-1 text-[11px] text-snow-3 sm:block">
-              Taqqoslashsiz
+              {ui.noCompare}
             </span>
           </div>
 
@@ -36,17 +39,15 @@ export function DashboardMockup({ compact = false }: { compact?: boolean }) {
               <HealthRing score={health.score} size={112} />
               <div className="min-w-0 flex-1 lg:w-full lg:flex-none">
                 <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.13em] text-snow-3 lg:text-center">
-                  Kompaniya salomatligi
+                  {ui.health}
                 </p>
                 <ul className="space-y-1">
-                  {health.parts.map((p) => (
+                  {health.parts.map((p, i) => (
                     <li key={p.label} className="flex items-center justify-between gap-2 text-[10.5px]">
                       <span className="text-snow-3">
-                        {p.label} · {p.weight}%
+                        {ui.healthParts[i]} · {p.weight}%
                       </span>
-                      <span
-                        className={`font-semibold tabular ${p.score >= 60 ? "text-success" : "text-danger"}`}
-                      >
+                      <span className={`font-semibold tabular ${p.score >= 60 ? "text-success" : "text-danger"}`}>
                         {p.score}
                         <span className="text-snow-3">/100</span>
                       </span>
@@ -57,27 +58,27 @@ export function DashboardMockup({ compact = false }: { compact?: boolean }) {
             </Card>
 
             <Kpi
-              label="Oylik tushum"
+              label={ui.monthRevenue}
               value={finance.revenue}
-              hint="+8,7% o'tgan oyga"
+              hint={ui.revenueHint}
               hintTone="success"
               t="success"
               points={[42, 46, 44, 52, 58, 55, 64, 70]}
               delay={120}
             />
             <Kpi
-              label="Oylik xarajat"
+              label={ui.monthExpenses}
               value={finance.expenses}
-              hint="Reja doirasida"
+              hint={ui.expensesHint}
               hintTone="success"
               t="danger"
               points={[38, 41, 40, 44, 43, 47, 45, 49]}
               delay={240}
             />
             <Kpi
-              label="Oylik foyda"
+              label={ui.monthProfit}
               value={finance.profit}
-              hint="Marja 16,6%"
+              hint={ui.profitHint}
               hintTone="warning"
               t="violet"
               points={[12, 14, 13, 18, 21, 19, 24, 27]}
@@ -85,55 +86,54 @@ export function DashboardMockup({ compact = false }: { compact?: boolean }) {
             />
 
             <Card>
-              <CardLabel icon="primary">Sotuv voronkasi</CardLabel>
+              <CardLabel icon="primary">{ui.funnel}</CardLabel>
               <p className="text-[17px] font-semibold text-snow sm:text-[19px]">
-                <CountUp to={finance.funnel}  /> <span className="text-[13px] font-medium text-snow-2">so&apos;m</span>
+                <CountUp to={finance.funnel} />{" "}
+                <span className="text-[13px] font-medium text-snow-2">{ui.currency}</span>
               </p>
-              <p className="mt-1 text-[10.5px] text-snow-3">
-                {finance.leads} lid · {String(finance.conversion).replace(".", ",")}% bitimgacha yetadi
-              </p>
+              <p className="mt-1 text-[10.5px] text-snow-3">{ui.funnelNote}</p>
             </Card>
 
             <Card>
-              <CardLabel icon="warning">Bizga qarz</CardLabel>
+              <CardLabel icon="warning">{ui.debt}</CardLabel>
               <p className="text-[17px] font-semibold text-snow sm:text-[19px]">
-                <CountUp to={finance.receivables}  /> <span className="text-[13px] font-medium text-snow-2">so&apos;m</span>
+                <CountUp to={finance.receivables} />{" "}
+                <span className="text-[13px] font-medium text-snow-2">{ui.currency}</span>
               </p>
-              <p className="mt-1 text-[10.5px] text-danger">
-                {finance.overdueInvoices} ta muddati o&apos;tgan hisob-faktura
-              </p>
+              <p className="mt-1 text-[10.5px] text-danger">{ui.debtNote}</p>
             </Card>
 
             <Card>
-              <CardLabel icon="success">Zaxira</CardLabel>
-              <p className="text-[17px] font-semibold text-snow sm:text-[19px]">Cheklanmagan</p>
-              <p className="mt-1 text-[10.5px] text-snow-3">Daromad xarajatni qoplaydi</p>
+              <CardLabel icon="success">{ui.runway}</CardLabel>
+              <p className="text-[17px] font-semibold text-snow sm:text-[19px]">{ui.runwayValue}</p>
+              <p className="mt-1 text-[10.5px] text-snow-3">{ui.runwayNote}</p>
             </Card>
           </div>
 
           {!compact && (
             <>
               <Card className="mt-3">
-                <p className="mb-3 text-[12.5px] font-semibold text-snow">Reja/fakt · 2026</p>
+                <p className="mb-3 text-[12.5px] font-semibold text-snow">{ui.planFact}</p>
                 <div className="grid gap-3 sm:grid-cols-2 sm:gap-x-6">
                   {planFact.map((p, i) => (
                     <PlanBar
                       key={p.label}
-                      label={p.label}
+                      label={ui.planLabels[i]}
                       value={p.value}
                       fact={p.fact}
                       target={p.target}
                       forecast={p.forecast}
                       t={p.tone}
                       delay={200 + i * 90}
+                      ui={ui}
                     />
                   ))}
                 </div>
               </Card>
 
               <Card className="mt-3">
-                <p className="mb-3 text-[12.5px] font-semibold text-snow">12 oylik dinamika</p>
-                <YearChart />
+                <p className="mb-3 text-[12.5px] font-semibold text-snow">{ui.dynamics}</p>
+                <YearChart ui={ui} />
               </Card>
             </>
           )}
@@ -164,9 +164,11 @@ function Kpi({
     <Card>
       <CardLabel icon={t}>{label}</CardLabel>
       <p className="text-[17px] font-semibold leading-none text-snow sm:text-[19px]">
-        <CountUp to={value}  />
+        <CountUp to={value} />
       </p>
-      <p className={`mt-1 text-[10.5px] ${hintTone === "success" ? "text-success" : "text-warning"}`}>{hint}</p>
+      <p className={`mt-1 text-[10.5px] ${hintTone === "success" ? "text-success" : "text-warning"}`}>
+        {hint}
+      </p>
       <div className="-mx-1 mt-2">
         <Spark points={points} color={tone[t].ring} delay={delay} />
       </div>

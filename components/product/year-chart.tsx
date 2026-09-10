@@ -1,15 +1,16 @@
 import { finance, monthly } from "@/lib/demo";
 import { uzs } from "@/lib/format";
+import type { Dict } from "@/lib/i18n";
 
 /**
  * Годовая динамика: линия выручки и линия прибыли — экран «Обзор».
  *
  * Подписи месяцев лежат ОТДЕЛЬНОЙ строкой во всю ширину графика и раздаются
  * `justify-between`. Раньше они висели в одном ряду с легендой и сбивались в
- * правый угол: последние месяцы наезжали друг на друга, а «Dek» обрезался краем
- * карточки. Легенда теперь под ними, слева — там, где её и ищут.
+ * правый угол: последние месяцы наезжали друг на друга, а «Дек» обрезался
+ * краем карточки. Легенда теперь под ними, слева — там, где её и ищут.
  */
-export function YearChart() {
+export function YearChart({ ui }: { ui: Dict["ui"] }) {
   const w = 700;
   const h = 150;
   const max = Math.max(...monthly.map((m) => m.revenue));
@@ -62,21 +63,23 @@ export function YearChart() {
       </svg>
 
       <div className="mt-2 flex justify-between text-[9px] text-snow-3/70 sm:text-[9.5px]">
-        {monthly.map((m) => (
-          <span key={m.m}>{m.m}</span>
+        {ui.months.map((m) => (
+          <span key={m}>{m}</span>
         ))}
       </div>
 
       <div className="mt-2.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-line-soft pt-2.5">
         <div className="flex gap-4 text-[10.5px] text-snow-3">
           <span className="flex items-center gap-1.5">
-            <i className="h-0.5 w-4 rounded bg-primary-bright" /> Tushum
+            <i className="h-0.5 w-4 rounded bg-primary-bright" /> {ui.plRows[0]}
           </span>
           <span className="flex items-center gap-1.5">
-            <i className="h-0.5 w-4 rounded bg-success" /> Foyda
+            <i className="h-0.5 w-4 rounded bg-success" /> {ui.plRows[3]}
           </span>
         </div>
-        <span className="text-[10.5px] text-snow-3">Pik: {uzs(finance.peakMonth)} so&apos;m</span>
+        <span className="text-[10.5px] text-snow-3">
+          {ui.peak}: {uzs(finance.peakMonth)} {ui.currency}
+        </span>
       </div>
     </div>
   );

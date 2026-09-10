@@ -84,12 +84,15 @@ export function Section({
   className?: string;
   bleed?: boolean;
 } & React.HTMLAttributes<HTMLElement>) {
+  // Тёмные секции полупрозрачны: под ними живёт общий фон страницы
+  // (components/motion/backdrop.tsx). Светлые — сплошные: сияние сквозь них
+  // выглядело бы грязью, а не светом.
   const bg =
     tone === "light"
       ? "bg-paper text-ink-1"
       : tone === "night"
-        ? "bg-night text-snow"
-        : "bg-ink text-snow";
+        ? "bg-night/90 text-snow"
+        : "bg-ink/85 text-snow";
 
   return (
     <section

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHead, Shell } from "@/components/ui/section";
-import { faq } from "@/lib/demo";
+import type { Dict } from "@/lib/i18n";
 
 /**
  * Вопросы и ответы.
@@ -16,38 +16,33 @@ import { faq } from "@/lib/demo";
  * интеграции): обещать конкретику, которой нет, — худшее, что может сделать
  * страница продукта.
  */
-export function Faq() {
+export function Faq({ d }: { d: Dict }) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <Section id="faq" tone="light">
       <Shell>
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-          <SectionHead
-            tone="light"
-            eyebrow="Savol-javob"
-            title={<>Ko&apos;p so&apos;raladigan savollar</>}
-            lead="Javob topilmadimi — demo suhbatida so'rang, aniq holatingizga qarab javob beramiz."
-          />
+          <SectionHead tone="light" eyebrow={d.faq.eyebrow} title={d.faq.title} lead={d.faq.lead} />
 
           <Reveal as="dl" className="divide-y divide-hairline border-y border-hairline">
-            {faq.map((item, i) => {
+            {d.faq.items.map(([q, a], i) => {
               const isOpen = open === i;
               return (
-                <div key={item.q}>
+                <div key={q}>
                   <dt>
                     <button
                       type="button"
                       onClick={() => setOpen(isOpen ? null : i)}
                       aria-expanded={isOpen}
-                      aria-controls={`faq-${i}`}
+                      aria-controls={"faq-" + i}
                       className="flex w-full items-start justify-between gap-6 py-5 text-left"
                     >
                       <span className="text-[15.5px] font-medium leading-snug text-ink-1 sm:text-[17px]">
-                        {item.q}
+                        {q}
                       </span>
                       <span
-                        className={`mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-hairline text-ink-2 transition-transform duration-300 ${
+                        className={`mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-hairline text-ink-2 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                           isOpen ? "rotate-45 border-primary/40 text-primary" : ""
                         }`}
                         aria-hidden="true"
@@ -58,8 +53,8 @@ export function Faq() {
                       </span>
                     </button>
                   </dt>
-                  <dd id={`faq-${i}`} hidden={!isOpen} className="pb-6 pr-10">
-                    <p className="max-w-[68ch] text-[14.5px] leading-relaxed text-ink-2">{item.a}</p>
+                  <dd id={"faq-" + i} hidden={!isOpen} className="pb-6 pr-10">
+                    <p className="max-w-[68ch] text-[14.5px] leading-relaxed text-ink-2">{a}</p>
                   </dd>
                 </div>
               );

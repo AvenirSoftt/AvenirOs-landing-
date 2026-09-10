@@ -5,6 +5,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Heading, Shell } from "@/components/ui/section";
+import type { Dict } from "@/lib/i18n";
 
 /**
  * Закрывающий экран и форма демо.
@@ -20,7 +21,7 @@ import { Heading, Shell } from "@/components/ui/section";
 
 const sizes = ["1–10", "11–30", "31–100", "100+"];
 
-export function Cta() {
+export function Cta({ d }: { d: Dict }) {
   const [state, setState] = useState<"idle" | "ready">("idle");
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
@@ -31,39 +32,35 @@ export function Cta() {
   };
 
   return (
-    <section id="demo" className="relative isolate overflow-hidden bg-ink py-20 sm:py-28">
-      {/* Раньше здесь стоял приглушённый макет дашборда «на фоне». В деле он
-          читался не как продукт, а как грязное пятно за формой — размытый
-          силуэт, который непонятно что делает. Убран: фон держат сетка и свет,
-          а сам интерфейс на странице уже показан семь раз в полную силу. */}
-      <div className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(60%_60%_at_50%_40%,#000,transparent_100%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(55%_100%_at_50%_0%,rgba(37,99,235,0.16),transparent_70%)]" />
+    <section id="demo" className="vignette relative isolate overflow-hidden bg-ink/80 py-20 sm:py-28">
+      <div className="grid-lines pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(60%_60%_at_50%_40%,#000,transparent_100%)]" />
+      <div
+        data-glow
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(55%_100%_at_50%_0%,rgba(37,99,235,0.16),transparent_70%)]"
+      />
 
       <Shell>
         <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
           <Reveal>
             <p className="mb-5 flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-snow-2">
               <span className="inline-block h-px w-6 bg-primary-bright" />
-              Demo
+              {d.cta.eyebrow}
             </p>
-            <Heading size="h1">
-              Biznesingizni bitta tizimga yig&apos;ishga tayyormisiz?
-            </Heading>
-            <p className="mt-6 max-w-[54ch] text-[17px] leading-relaxed text-snow-2">
-              Sotuv, moliya, loyihalar va jamoani AvenirOS orqali yagona tizimdan boshqaring.
-              Demo — jonli tizim ekranlari va sizning jarayoningiz bo&apos;yicha suhbat.
-            </p>
+            <Heading size="h1">{d.cta.title}</Heading>
+            <p className="mt-6 max-w-[54ch] text-[17px] leading-relaxed text-snow-2">{d.cta.lead}</p>
 
             <ul data-stagger className="mt-9 space-y-3">
-              {[
-                "Tizimni jonli ko'rsatamiz — slayd emas",
-                "Jarayoningizni birga ko'rib chiqamiz",
-                "Nima moslashtirish kerakligini aytamiz",
-              ].map((t) => (
+              {d.cta.bullets.map((t) => (
                 <li key={t} className="flex items-start gap-3 text-[14.5px] text-snow-2">
                   <span className="mt-[3px] text-success" aria-hidden="true">
                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-                      <path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M3 8.5 6.3 12 13 4.5"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </span>
                   {t}
@@ -73,34 +70,31 @@ export function Cta() {
           </Reveal>
 
           <Reveal delay={90}>
-            <form
-              onSubmit={submit}
-              className="rounded-2xl border border-line bg-panel p-5 sm:p-6"
-              noValidate={false}
-            >
+            <form onSubmit={submit} className="rounded-2xl border border-line bg-panel/90 p-5 backdrop-blur-sm sm:p-6">
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field id="ism" label="Ism va familiya" required autoComplete="name" />
-                <Field id="tel" label="Telefon raqam" required type="tel" autoComplete="tel" placeholder="+998 __ ___ __ __" />
-                <Field id="tg" label="Telegram" placeholder="@username" />
-                <Field id="kompaniya" label="Kompaniya" autoComplete="organization" />
+                <Field id="ism" label={d.cta.form.name} required autoComplete="name" />
+                <Field
+                  id="tel"
+                  label={d.cta.form.phone}
+                  required
+                  type="tel"
+                  autoComplete="tel"
+                  placeholder="+998 __ ___ __ __"
+                />
+                <Field id="tg" label={d.cta.form.telegram} placeholder="@username" />
+                <Field id="kompaniya" label={d.cta.form.company} autoComplete="organization" />
 
                 <div className="sm:col-span-2">
                   <span className="mb-1.5 block text-[12.5px] font-medium text-snow-2">
-                    Xodimlar soni
+                    {d.cta.form.size}
                   </span>
                   <div className="flex flex-wrap gap-2">
                     {sizes.map((s, i) => (
                       <label
                         key={s}
-                        className="cursor-pointer rounded-lg border border-line px-3.5 py-2 text-[13px] text-snow-2 transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/15 has-[:checked]:text-snow"
+                        className="cursor-pointer rounded-lg border border-line px-3.5 py-2 text-[13px] text-snow-2 transition-colors duration-300 has-[:checked]:border-primary has-[:checked]:bg-primary/15 has-[:checked]:text-snow"
                       >
-                        <input
-                          type="radio"
-                          name="xodimlar"
-                          value={s}
-                          defaultChecked={i === 0}
-                          className="sr-only"
-                        />
+                        <input type="radio" name="xodimlar" value={s} defaultChecked={i === 0} className="sr-only" />
                         {s}
                       </label>
                     ))}
@@ -109,14 +103,14 @@ export function Cta() {
 
                 <div className="sm:col-span-2">
                   <label htmlFor="xabar" className="mb-1.5 block text-[12.5px] font-medium text-snow-2">
-                    Xabar
+                    {d.cta.form.message}
                   </label>
                   <textarea
                     id="xabar"
                     name="xabar"
                     rows={3}
                     className="w-full resize-y rounded-xl border border-line bg-[#0f151e] px-3.5 py-2.5 text-[14px] text-snow placeholder:text-snow-3/70 focus:border-primary focus:outline-none"
-                    placeholder="Hozir qanday tizimlardan foydalanasiz?"
+                    placeholder={d.cta.form.messagePlaceholder}
                   />
                 </div>
               </div>
@@ -124,7 +118,7 @@ export function Cta() {
               {/* Магнит у кнопки во всю ширину выключен: тянуться некуда, а
                   дрожание широкого блока под курсором выглядит браком. */}
               <Button type="submit" magnetic={false} className="mt-5 w-full" arrow>
-                Demo so&apos;rash
+                {d.cta.form.submit}
               </Button>
 
               {state === "ready" ? (
@@ -132,9 +126,8 @@ export function Cta() {
                   role="status"
                   className="mt-4 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3.5 text-[13.5px] leading-relaxed text-snow-2"
                 >
-                  <b className="font-semibold text-snow">Forma hali serverga ulanmagan.</b> Sizni
-                  kutdirib qo&apos;ymaslik uchun ochiq aytamiz: hozircha so&apos;rovni Telegram
-                  yoki telefon orqali qoldiring — javob o&apos;sha kuni bo&apos;ladi.
+                  <b className="font-semibold text-snow">{d.cta.form.noticeTitle}</b>{" "}
+                  {d.cta.form.noticeText}
                   <span className="mt-3 flex flex-wrap gap-2">
                     <a
                       href="https://t.me/avenir_uz"
@@ -154,7 +147,7 @@ export function Cta() {
                 </div>
               ) : (
                 <p className="mt-3 text-center text-[12px] text-snow-3">
-                  Yoki to&apos;g&apos;ridan-to&apos;g&apos;ri:{" "}
+                  {d.cta.form.direct}{" "}
                   <a href="https://t.me/avenir_uz" target="_blank" rel="noreferrer" className="text-primary-bright">
                     @avenir_uz
                   </a>

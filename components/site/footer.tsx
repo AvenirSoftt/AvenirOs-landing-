@@ -22,7 +22,7 @@ export function Footer({ d }: { d: Dict }) {
       <Shell>
         <div data-stagger className="grid gap-10 sm:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <Logo size={34} caption />
+            <Logo size={40} caption />
             <p className="mt-4 max-w-[38ch] text-[13.5px] leading-relaxed text-snow-3">
               {d.footer.tagline}
             </p>

@@ -60,7 +60,7 @@ export function Navbar({ d, lang }: { d: Dict; lang: Locale }) {
         aria-label={d.nav.product}
       >
         <a href={`/${lang}`} aria-label={d.nav.home} className="shrink-0">
-          <Logo size={30} />
+          <Logo size={34} />
         </a>
 
         <ul className="ml-4 hidden items-center gap-1 lg:flex">

@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 
 import { Mark } from "@/components/site/mark";
+import { LangSwitch } from "@/components/site/lang-switch";
+import { Button } from "@/components/ui/button";
+import { useSmooth } from "@/components/motion/smooth-scroll";
 
 const links = [
   { href: "#mahsulot", label: "Mahsulot" },
@@ -29,13 +32,19 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Открытое мобильное меню не должно оставлять прокрутку под собой.
+  // Под открытым меню страница не должна ехать. При плавной прокрутке это
+  // делает сам Lenis (`stop`), а `overflow: hidden` остаётся для случая, когда
+  // скрипт не загрузился.
+  const smooth = useSmooth();
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    if (open) smooth.stop();
+    else smooth.start();
     return () => {
       document.body.style.overflow = "";
+      smooth.start();
     };
-  }, [open]);
+  }, [open, smooth]);
 
   return (
     <header
@@ -71,12 +80,13 @@ export function Navbar() {
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           <LangSwitch />
-          <a
-            href="#demo"
-            className="hidden rounded-lg bg-primary px-4 py-2 text-[13.5px] font-medium text-white transition-colors hover:bg-primary-bright sm:block"
-          >
-            Demo so&apos;rash
-          </a>
+          {/* Оборачиваем, а не гасим классом: у кнопки в базе свой display,
+              и `hidden` с ним спорит — на телефоне она всё равно вылезала. */}
+          <span className="hidden sm:block">
+            <Button href="#demo" size="md" className="!py-2">
+              Demo so&apos;rash
+            </Button>
+          </span>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -130,24 +140,5 @@ export function Navbar() {
         </ul>
       </div>
     </header>
-  );
-}
-
-function LangSwitch() {
-  // Пока сделан только узбекский. Русский и английский не выдаём за готовые
-  // ссылки — кнопка, которая ведёт в никуда, хуже честной пометки.
-  return (
-    <div className="flex items-center rounded-lg border border-line p-0.5" role="group" aria-label="Til">
-      <span className="rounded-md bg-white/8 px-2 py-1 text-[11.5px] font-semibold text-snow">UZ</span>
-      {["RU", "EN"].map((l) => (
-        <span
-          key={l}
-          title="Tez orada"
-          className="cursor-not-allowed px-2 py-1 text-[11.5px] font-medium text-snow-3/60"
-        >
-          {l}
-        </span>
-      ))}
-    </div>
   );
 }

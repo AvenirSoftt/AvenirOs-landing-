@@ -26,8 +26,16 @@ const CY = 280;
 
 export function Ecosystem() {
   return (
-    <Section id="mahsulot" tone="night">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_50%_at_50%_50%,rgba(37,99,235,0.14),transparent_70%)]" />
+    <Section
+      id="mahsulot"
+      tone="night"
+      data-eco-section
+      className="vignette md:flex md:min-h-[100svh] md:flex-col md:justify-center"
+    >
+      <div
+        data-glow
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_50%_at_50%_50%,rgba(37,99,235,0.16),transparent_70%)]"
+      />
       <Shell className="relative">
         <SectionHead
           align="center"
@@ -40,7 +48,7 @@ export function Ecosystem() {
           lead="Bo'limlar bir-biriga integratsiya qilinmagan — ular bitta tizimning qismlari. Shuning uchun bitim loyihaga, loyiha vazifa va hisob-fakturaga o'zi bog'lanadi."
         />
 
-        <Reveal className="mt-14 hidden md:block">
+        <div data-eco className="mx-auto mt-10 hidden w-full max-w-[880px] md:block">
           <svg viewBox="0 0 960 560" className="w-full" role="img" aria-label="AvenirOS bo'limlari markazga bog'langan sxema">
             <defs>
               <radialGradient id="core" cx="50%" cy="50%">
@@ -58,7 +66,8 @@ export function Ecosystem() {
               return (
                 <line
                   key={`l-${n.label}`}
-                  className="draw"
+                  data-eco-line
+                  className="eco-line"
                   style={{ "--len": len, "--d": `${120 + i * 90}ms` } as React.CSSProperties}
                   x1={CX}
                   y1={CY}
@@ -73,7 +82,7 @@ export function Ecosystem() {
             {/* Точка данных, бегущая от раздела к центру: «ma'lumot bir marta
                 kiritiladi» — здесь это видно, а не только написано. */}
             {nodes.map((n, i) => (
-              <circle key={`d-${n.label}`} className="flow-dot" r="2.6" fill="#38bdf8">
+              <circle key={`d-${n.label}`} data-eco-dot className="flow-dot" r="2.6" fill="#38bdf8">
                 <animateMotion
                   dur={`${3.4 + (i % 3) * 0.7}s`}
                   begin={`${i * 0.45}s`}
@@ -95,8 +104,10 @@ export function Ecosystem() {
             ))}
 
             {/* Центр */}
-            <circle className="breathe" cx={CX} cy={CY} r="86" fill="url(#core)" opacity="0.18" />
-            <circle cx={CX} cy={CY} r="62" fill="#101826" stroke="#2563eb" strokeWidth="1.5" />
+            <g data-eco-core>
+              <circle className="breathe" cx={CX} cy={CY} r="86" fill="url(#core)" opacity="0.18" />
+              <circle cx={CX} cy={CY} r="62" fill="#101826" stroke="#2563eb" strokeWidth="1.5" />
+            </g>
             <text
               x={CX}
               y={CY - 4}
@@ -110,8 +121,8 @@ export function Ecosystem() {
               yagona baza
             </text>
 
-            {nodes.map((n, i) => (
-              <g key={n.label} className="pop" style={{ "--d": `${420 + i * 80}ms` } as React.CSSProperties}>
+            {nodes.map((n) => (
+              <g key={n.label} data-eco-node className="eco-node">
                 <rect
                   x={n.x - 74}
                   y={n.y - 20}
@@ -133,7 +144,7 @@ export function Ecosystem() {
               </g>
             ))}
           </svg>
-        </Reveal>
+        </div>
 
         {/* Мобильный вариант: та же мысль без схемы */}
         <Reveal className="mt-10 md:hidden">
@@ -141,7 +152,7 @@ export function Ecosystem() {
             <p className="text-[15px] font-semibold text-snow">AvenirOS</p>
             <p className="mt-1 text-[12px] text-snow-3">yagona ma&apos;lumotlar bazasi</p>
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-2">
+          <div data-stagger className="mt-3 grid grid-cols-2 gap-2">
             {nodes.map((n) => (
               <span
                 key={n.label}
@@ -154,7 +165,7 @@ export function Ecosystem() {
           </div>
         </Reveal>
 
-        <Reveal className="mx-auto mt-12 max-w-[720px] text-center" delay={120}>
+        <Reveal data-eco-tail className="mx-auto mt-10 max-w-[720px] text-center" delay={120}>
           <p className="text-[15px] leading-relaxed text-snow-2 sm:text-[17px]">
             Ma&apos;lumot bir marta kiritiladi — va ishlaydi hamma joyda: sotuvda, moliyada,
             loyihada va hisobotda.

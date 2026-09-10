@@ -77,6 +77,25 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ["--no-san
     notice.slice(0, 60),
   );
 
+  // Выбор языка: меню открывается, готов только узбекский, недоступные
+  // помечены и не притворяются работающими.
+  const langBtn = page.locator('header button[aria-haspopup="menu"]');
+  await langBtn.click();
+  await page.waitForTimeout(350);
+  const menu = page.locator('header [role="menu"]');
+  ok(await menu.isVisible(), "меню языка открывается");
+  ok(
+    (await menu.locator('[role="menuitemradio"][aria-checked="true"]').innerText()).includes("UZ"),
+    "выбранный язык отмечен",
+  );
+  ok(
+    (await menu.locator('[aria-disabled="true"]').count()) === 2,
+    "русский и английский честно помечены недоступными",
+  );
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(300);
+  ok(!(await menu.isVisible()), "Escape закрывает меню языка");
+
   // Якоря шапки. Ждём НУЖНОГО положения, а не «пока перестанет ехать»: плавная
   // прокрутка через всю страницу начинается не сразу и идёт больше секунды —
   // проверка «страница стоит» срабатывала мгновенно, ещё до старта.

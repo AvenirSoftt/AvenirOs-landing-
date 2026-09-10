@@ -1,11 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
+import { PageMotion } from "@/components/motion/page-motion";
 
+/**
+ * Две гарнитуры, у каждой своя работа. Inter — интерфейс и текст: он же стоит
+ * в самом AvenirOS, поэтому макеты экранов выглядят как настоящие. Space
+ * Grotesk — заголовки: у Inter в крупном кегле нет характера, и первый экран
+ * начинает читаться как «шрифт по умолчанию».
+ */
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin", "latin-ext"],
   display: "swap",
+});
+
+const space = Space_Grotesk({
+  variable: "--font-space",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "600", "700"],
 });
 
 const title = "AvenirOS — Biznesingizning barcha jarayonlari bitta tizimda";
@@ -62,15 +77,21 @@ const jsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="uz" className={`${inter.variable} antialiased`}>
-      <body className="bg-ink text-snow">
+    <html lang="uz" className={`${inter.variable} ${space.variable} antialiased`}>
+      <body className="grain bg-ink text-snow">
         <a
           href="#kontent"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
         >
           Asosiy kontentga o&apos;tish
         </a>
-        {children}
+        {/* Без JavaScript появления не сработают (их включает наблюдатель), и
+            страница осталась бы наполовину пустой. Здесь всё видно сразу. */}
+        <noscript>
+          <style>{`.reveal,.rise,.rise-screen,.pop,.grow-x,.grow-y,.draw,.draw-arc,.fade-in-slow{opacity:1!important;transform:none!important;stroke-dashoffset:0!important}`}</style>
+        </noscript>
+        <SmoothScroll>{children}</SmoothScroll>
+        <PageMotion />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

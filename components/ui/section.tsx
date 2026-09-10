@@ -40,7 +40,8 @@ export function Heading({
 }) {
   return (
     <h2
-      className={`text-balance font-semibold leading-[1.06] tracking-[-0.03em] ${
+      data-split
+      className={`text-balance font-[family-name:var(--font-display)] font-semibold leading-[1.04] tracking-[-0.035em] ${
         size === "h1" ? "text-[length:var(--text-h1)]" : "text-[length:var(--text-h2)]"
       } ${tone === "dark" ? "text-snow" : "text-ink-1"} ${className}`}
     >
@@ -75,13 +76,14 @@ export function Section({
   children,
   className = "",
   bleed = false,
+  ...rest
 }: {
   id?: string;
   tone?: "dark" | "light" | "night";
   children: ReactNode;
   className?: string;
   bleed?: boolean;
-}) {
+} & React.HTMLAttributes<HTMLElement>) {
   const bg =
     tone === "light"
       ? "bg-paper text-ink-1"
@@ -93,6 +95,7 @@ export function Section({
     <section
       id={id}
       className={`relative overflow-hidden ${bg} ${bleed ? "" : "py-20 sm:py-28 lg:py-32"} ${className}`}
+      {...rest}
     >
       {children}
     </section>

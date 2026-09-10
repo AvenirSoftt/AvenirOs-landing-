@@ -32,7 +32,7 @@ export function Work() {
           </Reveal>
         </div>
 
-        <Reveal delay={140} className="mt-10 grid gap-x-10 gap-y-6 border-t border-hairline pt-8 sm:grid-cols-3">
+        <div data-stagger className="mt-10 grid gap-x-10 gap-y-6 border-t border-hairline pt-8 sm:grid-cols-3">
           {[
             {
               t: "Ijrochi va nazoratchi",
@@ -52,7 +52,7 @@ export function Work() {
               <p className="mt-2 text-[14px] leading-relaxed text-ink-2">{c.d}</p>
             </div>
           ))}
-        </Reveal>
+        </div>
       </Shell>
     </Section>
   );

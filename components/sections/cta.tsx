@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { Reveal } from "@/components/ui/reveal";
+import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Heading, Shell } from "@/components/ui/section";
 
@@ -53,7 +54,7 @@ export function Cta() {
               Demo — jonli tizim ekranlari va sizning jarayoningiz bo&apos;yicha suhbat.
             </p>
 
-            <ul className="mt-9 space-y-3">
+            <ul data-stagger className="mt-9 space-y-3">
               {[
                 "Tizimni jonli ko'rsatamiz — slayd emas",
                 "Jarayoningizni birga ko'rib chiqamiz",
@@ -120,12 +121,11 @@ export function Cta() {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="mt-5 w-full rounded-xl bg-primary px-6 py-3.5 text-[15px] font-medium text-white transition-colors hover:bg-primary-bright"
-              >
+              {/* Магнит у кнопки во всю ширину выключен: тянуться некуда, а
+                  дрожание широкого блока под курсором выглядит браком. */}
+              <Button type="submit" magnetic={false} className="mt-5 w-full" arrow>
                 Demo so&apos;rash
-              </button>
+              </Button>
 
               {state === "ready" ? (
                 <div

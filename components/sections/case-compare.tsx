@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHead, Shell } from "@/components/ui/section";
 
@@ -25,19 +26,14 @@ export function CaseStudy() {
               lead="Bu mahsulot marketing agentligi uchun ishlab chiqilgan va o'sha yerda har kuni ishlatiladi. Shuning uchun u ko'rgazma uchun emas, haqiqiy jarayonga moslashgan."
             />
             <Reveal delay={90} className="mt-8">
-              <a
-                href="https://avenir.uz/portfolio/avenir-os"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 text-[14.5px] font-medium text-primary-bright transition-colors hover:text-accent"
-              >
+              <Button href="https://avenir.uz/portfolio/avenir-os" variant="ghost" size="md">
                 Keysni to&apos;liq o&apos;qish
-                <span aria-hidden="true">↗</span>
-              </a>
+                <span aria-hidden="true" className="relative">↗</span>
+              </Button>
             </Reveal>
           </div>
 
-          <Reveal delay={60} className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line">
+          <div data-stagger className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line">
             {[
               { v: "16", l: "tizim bo'limi" },
               { v: "7", l: "foydalanuvchi roli" },
@@ -57,7 +53,7 @@ export function CaseStudy() {
                 Docker.
               </p>
             </div>
-          </Reveal>
+          </div>
         </div>
       </Shell>
     </Section>
@@ -98,7 +94,7 @@ export function Comparison() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-3">
               AvenirOS&apos;siz
             </p>
-            <ul className="mt-5 space-y-3">
+            <ul data-stagger className="mt-5 space-y-3">
               {without.map((w) => (
                 <li key={w} className="flex items-start gap-3 text-[14.5px] text-ink-2">
                   <span className="mt-[7px] h-px w-3 shrink-0 bg-ink-3" aria-hidden="true" />
@@ -112,7 +108,7 @@ export function Comparison() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary-bright">
               AvenirOS bilan
             </p>
-            <ul className="mt-5 space-y-3">
+            <ul data-stagger className="mt-5 space-y-3">
               {withOs.map((w) => (
                 <li key={w} className="flex items-start gap-3 text-[14.5px] text-snow">
                   <span className="mt-[3px] shrink-0 text-success" aria-hidden="true">

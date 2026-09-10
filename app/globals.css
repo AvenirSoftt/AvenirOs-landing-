@@ -39,19 +39,51 @@
   --color-violet: #a78bfa;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* Заголовки — отдельной гарнитурой. Inter отлично работает в интерфейсе (и
+     остаётся в макетах продукта), но на первом экране он же читается как
+     «шрифт по умолчанию»: у него нет характера, за который цепляется глаз.
+     Space Grotesk даёт техничную, чуть чертёжную форму — она рифмуется с
+     системой и при этом узнаётся. */
+  --font-display: var(--font-space), var(--font-inter), sans-serif;
 
-  --text-display: clamp(2.75rem, 6.5vw, 5.5rem);
-  --text-h1: clamp(2.25rem, 4.6vw, 3.75rem);
-  --text-h2: clamp(1.75rem, 3.2vw, 2.75rem);
+  /* Контраст размеров: от 7 rem на первом экране до 13 px в подписях —
+     примерно 8:1. Мелкий текст при этом не мельче 12 px. */
+  --text-display: clamp(2.85rem, 7.2vw, 7rem);
+  --text-h1: clamp(2.35rem, 5vw, 4.25rem);
+  --text-h2: clamp(1.9rem, 3.6vw, 3.1rem);
 
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html {
+  /* Плавную прокрутку ведёт Lenis (components/motion/smooth-scroll.tsx), а
+     браузерный smooth с ней конфликтует — остаётся только запасной путь, когда
+     скрипт не загрузился. */
   scroll-behavior: smooth;
-  /* Липкая шапка не должна накрывать заголовок при переходе по якорю. */
   scroll-padding-top: 96px;
   -webkit-text-size-adjust: 100%;
+}
+
+/* Обязательная разметка Lenis: без неё прокрутка дёргается. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 body {
@@ -92,6 +124,30 @@ body {
 .reveal[data-shown="true"] {
   opacity: 1;
   transform: none;
+}
+
+/* GSAP жив — крупные появления ведёт он. */
+.motion-on .reveal,
+.motion-on .rise,
+.motion-on .rise-screen {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  animation: none;
+}
+
+/* Строка заголовка выезжает из-под маски — обёртки ставит SplitText. */
+.split-line {
+  will-change: transform;
+}
+
+/* Магнитная кнопка: смещение задаёт указатель, кривая — своя. */
+.magnetic {
+  transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 /* ── Появление первого экрана ─────────────────────────────────
@@ -207,6 +263,15 @@ body {
   stroke-dashoffset: 0;
 }
 
+/* Схема «Bitta tizim»: собирается под прокрутку (GSAP). Классы ниже — только
+   ЗАПАСНОЙ вид: если скрипт не загрузился, схема обязана быть видимой целиком,
+   а не остаться пустым полем. Поэтому здесь нет opacity: 0 — под управлением
+   GSAP начальное состояние ставит он сам. */
+.motion-on .eco-line {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+}
+
 /* Дуга кольца: дасharray уже занят длиной дуги, поэтому едет только смещение. */
 .draw-arc {
   stroke-dashoffset: var(--len, 0);
@@ -298,6 +363,30 @@ body {
   .flow-dot {
     display: none;
   }
+}
+
+/* ── Атмосфера ─────────────────────────────────────────────────
+   Зерно поверх всей страницы. Ровные заливки на больших тёмных
+   площадях выглядят «цифровыми» и полосят на градиентах; едва
+   заметный шум даёт им физическую поверхность и убирает бендинг.
+   Один SVG в data-URI, 0 запросов, не перехватывает события. */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Виньетка: края тёмных секций чуть гаснут, взгляд остаётся в центре. */
+.vignette::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 80% at 50% 40%, transparent 45%, rgba(4, 7, 12, 0.55) 100%);
 }
 
 /* Сетка на тёмном фоне — «техническая» подложка вместо картинок. */

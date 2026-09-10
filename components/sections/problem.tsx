@@ -41,7 +41,7 @@ export function Problem() {
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           {/* Разрозненные инструменты: карточки намеренно «косые» и без связи */}
           <Reveal className="relative">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div data-stagger className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {scattered.map((s, i) => (
                 <div
                   key={s.name}
@@ -75,7 +75,7 @@ export function Problem() {
             </div>
           </Reveal>
 
-          <Reveal delay={120} as="ul" className="space-y-0 self-center">
+          <ul data-stagger className="space-y-0 self-center">
             {pains.map((p, i) => (
               <li
                 key={p}
@@ -87,7 +87,7 @@ export function Problem() {
                 <span className="text-[15px] leading-snug text-ink-1 sm:text-[16.5px]">{p}</span>
               </li>
             ))}
-          </Reveal>
+          </ul>
         </div>
       </Shell>
     </Section>

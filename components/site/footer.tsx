@@ -20,7 +20,7 @@ export function Footer() {
   return (
     <footer className="border-t border-line bg-night py-14">
       <Shell>
-        <div className="grid gap-10 sm:grid-cols-[1.4fr_1fr_1fr]">
+        <div data-stagger className="grid gap-10 sm:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             {/* «Avenir» и «OS» — ОДИН flex-ребёнок. Раньше текст лежал прямо в
                 flex-контейнере с gap, и подвал показывал «Avenir  OS» с дырой. */}

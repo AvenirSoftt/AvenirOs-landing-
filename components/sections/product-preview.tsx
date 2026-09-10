@@ -34,7 +34,7 @@ export function ProductPreview() {
               lead="Birinchi liddan yopilgan bitimgacha: har bir karta o'z bosqichida, summasi va ehtimolligi bilan turadi. Bitim yutilganda u loyihaga va hisob-fakturaga o'zi ulanadi."
             />
 
-            <Reveal as="ul" delay={100} className="mt-9 space-y-0">
+            <ul data-stagger className="mt-9 space-y-0">
               {links.map((l) => (
                 <li
                   key={l.k}
@@ -46,7 +46,7 @@ export function ProductPreview() {
                   <span className="text-[14.5px] text-snow-2">{l.v}</span>
                 </li>
               ))}
-            </Reveal>
+            </ul>
           </div>
 
           <Reveal delay={80} className="min-w-0">

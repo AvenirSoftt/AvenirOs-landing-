@@ -34,7 +34,7 @@ export function DataFlow() {
         />
 
         <Reveal className="mt-14">
-          <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6 lg:gap-0">
+          <ol data-stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6 lg:gap-0">
             {flow.map((s, i) => (
               <li key={s.k} className="relative lg:px-3">
                 {/* Соединительная линия рисуется только на широком экране: в
@@ -94,7 +94,7 @@ export function Benefits() {
           title={<>To&apos;rtta narsa o&apos;zgaradi</>}
         />
 
-        <div className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
+        <div data-stagger className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
           {benefits.map((b, i) => (
             <Reveal key={b.n} delay={i * 70} className="border-t border-hairline pt-6">
               <p className="text-[12px] font-semibold tabular text-primary">{b.n}</p>
@@ -122,7 +122,7 @@ export function HowItWorks() {
       <Shell>
         <div className="border-t border-hairline pt-16 sm:pt-20">
           <SectionHead tone="light" eyebrow="Qanday boshlanadi" title={<>Uch qadam</>} />
-          <div className="mt-12 grid gap-8 sm:grid-cols-3 sm:gap-6">
+          <div data-stagger className="mt-12 grid gap-8 sm:grid-cols-3 sm:gap-6">
             {steps.map((s, i) => (
               <Reveal key={s.n} delay={i * 80}>
                 <span className="text-[13px] font-semibold tabular text-ink-3">{s.n}</span>

@@ -17,13 +17,14 @@ export function Reveal({
   delay = 0,
   className = "",
   once = true,
+  ...rest
 }: {
   children: ReactNode;
   as?: ElementType;
   delay?: number;
   className?: string;
   once?: boolean;
-}) {
+} & Record<string, unknown>) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -64,6 +65,7 @@ export function Reveal({
       ref={ref}
       className={`reveal ${className}`}
       style={{ "--reveal-delay": `${delay}ms` } as React.CSSProperties}
+      {...rest}
     >
       {children}
     </Tag>

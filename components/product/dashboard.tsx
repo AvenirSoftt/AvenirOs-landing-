@@ -5,16 +5,16 @@ import { LiveNumber } from "@/components/ui/live-number";
 import { Chrome, Rail } from "@/components/product/chrome";
 import { YearChart } from "@/components/product/year-chart";
 import { Card, CardLabel, HealthRing, PlanBar, Spark, tone } from "@/components/product/parts";
-import { finance, health, planFact } from "@/lib/demo";
+import { finance, health, planFact, projects, tasks, team } from "@/lib/demo";
 import type { Dict } from "@/lib/i18n";
 
 /**
  * Главный экран AvenirOS — «Дашборд агентства», собранный заново.
  *
  * Это не скриншот в рамке: разметка повторяет реальный экран (кольцо здоровья,
- * шесть карточек, план/факт, годовая динамика), но живёт как обычная вёрстка —
- * поэтому текст остаётся текстом, числа считаются на глазах, а на телефоне
- * блок перестраивается, а не мылится.
+ * шесть карточек, задачи, план/факт, годовая динамика), но живёт как обычная
+ * вёрстка — поэтому текст остаётся текстом, числа считаются на глазах, а на
+ * телефоне блок перестраивается, а не мылится.
  *
  * Разделено на `DashboardPanel` (содержимое) и `DashboardMockup` (рамка с
  * меню): содержимое переиспользует живой дашборд с первого экрана, у которого
@@ -150,6 +150,48 @@ export function DashboardPanel({
 
       {!compact && (
         <>
+          {/* Задачи на самом дашборде.
+              Владелец сказал прямо: «в большой карточке нет задач». И он прав
+              по сути — дашборд агентства, на котором видно деньги, но не видно
+              работу, показывает половину системы. Здесь шесть ближайших задач с
+              исполнителем и сроком; полный раздел открывается в меню слева.
+              Подпись берётся из того же словаря, что и пункт меню, — второго
+              названия у раздела быть не должно. */}
+          <Card className="mt-3">
+            <div className="mb-3 flex items-baseline justify-between gap-3">
+              <p className="text-[12.5px] font-semibold text-snow">{ui.rail[1]}</p>
+              <p className="text-[10.5px] text-snow-3 tabular">
+                {tasks.filter((t) => t.status !== 2).length} / {tasks.length}
+              </p>
+            </div>
+            <ul className="grid gap-2 sm:grid-cols-2">
+              {tasks.slice(0, 6).map((t) => (
+                <li key={ui.taskTitles[t.title]} className="flex items-center gap-2.5">
+                  <i
+                    className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                      t.status === 0 ? "bg-primary-bright" : t.status === 1 ? "bg-warning" : "bg-success"
+                    }`}
+                    aria-hidden="true"
+                  />
+                  <span className="min-w-0 flex-1 truncate text-[11.5px] text-snow-2">
+                    {ui.taskTitles[t.title]}
+                  </span>
+                  <span className="shrink-0 text-[10px] text-snow-3">{projects[t.project].name}</span>
+                  <span
+                    className="grid h-5 w-5 shrink-0 place-items-center rounded-md bg-white/[0.08] text-[9px] font-semibold text-snow-2"
+                    title={team[t.who].name}
+                  >
+                    {team[t.who].name
+                      .split(" ")
+                      .map((w) => w[0])
+                      .join("")}
+                  </span>
+                  <span className="shrink-0 text-[10px] text-snow-3 tabular">{t.due}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+
           <Card className="mt-3">
             <p className="mb-3 text-[12.5px] font-semibold text-snow">{ui.planFact}</p>
             <div className="grid gap-3 sm:grid-cols-2 sm:gap-x-6">

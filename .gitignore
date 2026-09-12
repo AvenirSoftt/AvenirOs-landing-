@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# netlify: привязка папки к проекту и служебный файл, который оставляет CLI
+.netlify
+deno.lock
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

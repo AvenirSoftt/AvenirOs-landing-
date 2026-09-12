@@ -143,7 +143,7 @@ export function Modules({ d }: { d: Dict }) {
                       .map((m) => (
                         <li
                           key={m.key}
-                          className="glass-soft rounded-lg px-3 py-2 text-[12px] text-snow-3"
+                          className="pane rounded-lg px-3 py-2 text-[12px] text-snow-3"
                         >
                           {d.modules.items[m.key][0]}
                         </li>

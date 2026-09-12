@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Chrome, Rail } from "@/components/product/chrome";
 import { DashboardPanel, type PanelData } from "@/components/product/dashboard";
@@ -27,17 +27,20 @@ import type { Dict } from "@/lib/i18n";
  *   • **числа живут** — раз в несколько секунд они смещаются, как смещается
  *     выручка в рабочий день.
  *
- * Три решения, которые здесь важнее кода:
+ * Четыре решения, которые здесь важнее кода:
  *
- * 1. **Дрожание чисел — только на дашборде и только когда вкладка видима.**
- *    Считать фон, который никто не смотрит, — это разряженная батарея
- *    телефона, и ничего больше.
+ * 1. **Дрожание чисел — только на дашборде, только при видимой вкладке и
+ *    только пока панель на экране.** Считать фон, который никто не смотрит, —
+ *    это отнятые кадры у прокрутки, которая как раз и происходит в этот
+ *    момент, и разряженная батарея телефона.
  * 2. **Случайности нет в первом рендере.** Сервер и клиент обязаны выдать
  *    одинаковую разметку, иначе React ругается на гидрацию; поэтому смещение
  *    начинается с нуля и появляется только в эффекте.
  * 3. **На узком экране меню продукта скрыто** (так в самом AvenirOS), поэтому
  *    под рамкой появляется своя лента разделов — иначе половина возможностей
  *    была бы доступна только на большом экране.
+ * 4. **Переключение раздела не двигает страницу.** Проверено замером: при
+ *    клике по пункту меню `scrollY` не меняется (`scripts/live-check.mjs`).
  */
 
 /** Множители периода. Не 3 и 12: у квартала и года есть сезонность, и ровные
@@ -47,13 +50,23 @@ const PERIODS = ["2026-09-01 — 2026-09-30", "2026-07-01 — 2026-09-30", "2026
 
 export function LiveDashboard({ d }: { d: Dict }) {
   const ui = d.ui;
+  const box = useRef<HTMLDivElement>(null);
   const [section, setSection] = useState(0);
   const [period, setPeriod] = useState(0);
+  const [onScreen, setOnScreen] = useState(false);
   /** Смещение живых чисел, в долях: 0 — ровно значения стенда. */
   const [drift, setDrift] = useState({ revenue: 0, expenses: 0, funnel: 0, receivables: 0 });
 
   useEffect(() => {
-    if (section !== 0) return;
+    const el = box.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting), { threshold: 0.05 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (section !== 0 || !onScreen) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const tick = () => {
@@ -71,7 +84,7 @@ export function LiveDashboard({ d }: { d: Dict }) {
 
     const timer = setInterval(tick, 3200);
     return () => clearInterval(timer);
-  }, [section]);
+  }, [section, onScreen]);
 
   const k = K[period];
   const revenue = Math.round(finance.revenue * k * (1 + drift.revenue));
@@ -128,7 +141,7 @@ export function LiveDashboard({ d }: { d: Dict }) {
   };
 
   return (
-    <div>
+    <div ref={box}>
       <Chrome
         title={current.title}
         tabs={current.tabs}

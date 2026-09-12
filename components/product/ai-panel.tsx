@@ -26,7 +26,7 @@ export function AiBody({ d }: { d: Dict }) {
             <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-violet/15 text-[11px] font-semibold text-violet">
               AI
             </span>
-            <p className="glass-soft max-w-[85%] rounded-2xl rounded-bl-md px-3.5 py-2 text-[12.5px] leading-relaxed text-snow-2">
+            <p className="panemax-w-[85%] rounded-2xl rounded-bl-md px-3.5 py-2 text-[12.5px] leading-relaxed text-snow-2">
               {m.text}
             </p>
           </div>
@@ -37,7 +37,7 @@ export function AiBody({ d }: { d: Dict }) {
         <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-violet/15 text-[11px] font-semibold text-violet">
           AI
         </span>
-        <span className="glass-soft flex items-center gap-1.5 rounded-2xl rounded-bl-md px-4 py-3">
+        <span className="paneflex items-center gap-1.5 rounded-2xl rounded-bl-md px-4 py-3">
           {[0, 1, 2].map((dot) => (
             <i
               key={dot}
@@ -48,7 +48,7 @@ export function AiBody({ d }: { d: Dict }) {
         </span>
       </div>
 
-      <div className="glass-soft flex items-center gap-2 rounded-xl px-3.5 py-2.5">
+      <div className="paneflex items-center gap-2 rounded-xl px-3.5 py-2.5">
         <span className="text-[12px] text-snow-3">{d.ai.input}</span>
         <span className="ml-auto grid h-7 w-7 place-items-center rounded-lg bg-primary text-white" aria-hidden="true">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none">

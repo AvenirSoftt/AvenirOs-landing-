@@ -18,7 +18,7 @@ import type { Dict } from "@/lib/i18n";
 export function Problem({ d }: { d: Dict }) {
   return (
     <Section id="imkoniyatlar">
-      <div className="grid-lines pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(65%_60%_at_50%_50%,#000,transparent_100%)]" />
+      <div className="grid-lines pointer-events-none absolute inset-0 opacity-20" />
       <Shell className="relative">
         <SectionHead eyebrow={d.problem.eyebrow} title={d.problem.title} lead={d.problem.lead} />
 
@@ -29,7 +29,7 @@ export function Problem({ d }: { d: Dict }) {
               {d.problem.tools.map(([name, note], i) => (
                 <div
                   key={name}
-                  className="lift glass-soft rounded-xl px-3.5 py-3 hover:border-snow-3/30"
+                  className="lift pane rounded-xl px-3.5 py-3 hover:border-snow-3/30"
                   style={{ transform: "rotate(" + ((i % 3) - 1) + "deg)" }}
                 >
                   <p className="text-[13px] font-semibold text-snow">{name}</p>

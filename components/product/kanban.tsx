@@ -55,7 +55,7 @@ export function KanbanBody({ d }: { d: Dict }) {
                 {col.leads.map((lead, li) => (
                   <article
                     key={`${col.stage}-${lead.company}-${lead.note}`}
-                    className="pop lift glass-soft rounded-lg p-2.5 hover:border-primary/40"
+                    className="pop lift pane rounded-lg p-2.5 hover:border-primary/40"
                     style={{ "--d": `${ci * 90 + li * 60}ms` } as React.CSSProperties}
                   >
                     <div className="flex items-center gap-2">

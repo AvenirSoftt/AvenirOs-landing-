@@ -23,7 +23,10 @@ import type { Dict } from "@/lib/i18n";
 export function Hero({ d }: { d: Dict }) {
   return (
     <section className="vignette relative isolate overflow-hidden bg-ink/70 pb-16 pt-28 sm:pb-24 sm:pt-36">
-      <div className="grid-lines pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(70%_55%_at_50%_0%,#000_35%,transparent_100%)]" />
+      {/* Маски (`mask-image`) здесь больше нет: она заводит отдельный слой
+          маски на всю секцию и пересчитывается при прокрутке. Тот же эффект
+          «сетка гаснет к краям» даёт меньшая непрозрачность — за ноль. */}
+      <div className="grid-lines pointer-events-none absolute inset-0 opacity-25" />
       <div
         data-glow
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[560px] bg-[radial-gradient(58%_100%_at_50%_0%,rgba(37,99,235,0.24),transparent_72%)]"

@@ -26,7 +26,7 @@ export type Tone = keyof typeof tone;
  */
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`glass-soft rounded-xl p-3.5 sm:p-4 ${className}`}>
+    <div className={`pane rounded-xl p-3.5 sm:p-4 ${className}`}>
       {children}
     </div>
   );

@@ -33,7 +33,7 @@ export function Cta({ d }: { d: Dict }) {
 
   return (
     <section id="demo" className="vignette relative isolate overflow-hidden bg-ink/80 py-20 sm:py-28">
-      <div className="grid-lines pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(60%_60%_at_50%_40%,#000,transparent_100%)]" />
+      <div className="grid-lines pointer-events-none absolute inset-0 opacity-20" />
       <div
         data-glow
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(55%_100%_at_50%_0%,rgba(37,99,235,0.16),transparent_70%)]"

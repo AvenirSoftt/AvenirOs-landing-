@@ -42,7 +42,7 @@ export function TasksBody({ d }: { d: Dict }) {
               {list.map((t, i) => (
                 <article
                   key={ui.taskTitles[t.title]}
-                  className="pop lift glass-soft rounded-lg p-2.5 hover:border-primary/40"
+                  className="pop lift pane rounded-lg p-2.5 hover:border-primary/40"
                   style={{ "--d": `${si * 90 + i * 60}ms` } as React.CSSProperties}
                 >
                   <p className="text-[12px] font-semibold leading-snug text-snow">

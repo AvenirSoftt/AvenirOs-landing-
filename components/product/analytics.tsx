@@ -91,7 +91,7 @@ export function AnalyticsBody({ d }: { d: Dict }) {
     <div className="p-4">
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
         {ui.kpis.map(([label, sub], i) => (
-          <div key={label} className="glass-soft rounded-lg px-3 py-2.5">
+          <div key={label} className="pane rounded-lg px-3 py-2.5">
             <p className="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-snow-3">{label}</p>
             <p className={`mt-1 text-[16px] font-semibold tabular ${tones[i]}`}>{values[i]}</p>
             <p className="text-[10px] text-snow-3">{sub}</p>
@@ -100,7 +100,7 @@ export function AnalyticsBody({ d }: { d: Dict }) {
       </div>
 
       <div className="mt-3 grid gap-3 lg:grid-cols-[1.5fr_1fr]">
-        <div className="glass-soft rounded-lg p-3.5">
+        <div className="pane rounded-lg p-3.5">
           <p className="mb-3 text-[12px] font-semibold text-snow">{ui.revenueProfit}</p>
           <div className="flex h-[128px] items-end gap-1.5">
             {monthly.map((m, i) => (
@@ -121,7 +121,7 @@ export function AnalyticsBody({ d }: { d: Dict }) {
           </div>
         </div>
 
-        <div className="glass-soft rounded-lg p-3.5">
+        <div className="pane rounded-lg p-3.5">
           <p className="mb-3 text-[12px] font-semibold text-snow">{ui.funnelStages}</p>
           <ul className="space-y-2.5">
             {[

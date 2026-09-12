@@ -81,7 +81,13 @@ export function Hero({ d }: { d: Dict }) {
           {/* Наклон при прокрутке ведёт GSAP по этому признаку. Внутри — живой
               интерфейс, поэтому `perspective` остаётся на обёртке: наклонять
               элемент, по которому кликают, нельзя — попадание уезжает. */}
-          <div data-hero-screen className="product-glow relative [perspective:1600px]">
+          {/* `rise-screen` здесь не ради входа, а ради СОДЕРЖИМОГО: правила в
+              globals.css доводят графики, полосы и кольцо до конечного
+              состояния внутри `[data-shown="true"]` ИЛИ `.rise-screen`. Панель
+              первого экрана не обёрнута в `Reveal` (её ведёт GSAP), и без
+              этого класса спарклайны в карточках и годовой график оставались
+              нарисованными «в ноль» — то есть невидимыми. */}
+          <div data-hero-screen className="rise-screen product-glow relative [perspective:1600px]">
             <LiveDashboard d={d} />
           </div>
         </Shell>

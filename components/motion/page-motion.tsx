@@ -63,8 +63,8 @@ export function PageMotion() {
         tl.from(lines, { yPercent: 120, duration: 1.15, stagger: 0.09, onComplete: unmask });
       }
 
-      tl.from("[data-hero-eyebrow]", { y: 14, opacity: 0, duration: 0.7 }, 0.05)
-        .from("[data-hero-lead]", { y: 18, opacity: 0, duration: 0.9 }, "-=0.7")
+      // Плашки над заголовком больше нет — вход начинается с подзаголовка.
+      tl.from("[data-hero-lead]", { y: 18, opacity: 0, duration: 0.9 }, 0.35)
         .from(
           "[data-hero-cta] > *",
           { y: 16, opacity: 0, duration: 0.7, stagger: 0.08 },

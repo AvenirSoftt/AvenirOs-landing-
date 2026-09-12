@@ -5,23 +5,26 @@ import { Reveal } from "@/components/ui/reveal";
  * Ритм страницы держится здесь, а не в каждой секции по отдельности.
  *
  * У всех секций один каркас: маленький «глазок» (eyebrow) → крупный заголовок →
- * короткий подзаголовок → визуал. Разной у секций остаётся ровно тема: тёмная
- * (как интерфейс продукта) или светлая (маркетинг). Из-за этого страница
- * читается как один документ, а не как склейка блоков от разных людей.
+ * короткий подзаголовок → визуал. Из-за этого страница читается как один
+ * документ, а не как склейка блоков от разных людей.
+ *
+ * **Светлых секций больше нет (12.09.2026, решение владельца).** Раньше
+ * маркетинговые блоки шли по белому фону, и страница чередовала тёмное со
+ * светлым. Теперь фон один на всю страницу, а блоки отличает СВЕТ: стекло,
+ * блик по кромке и тень (`.glass` в globals.css). Проп `tone` оставлен — на
+ * него опирается десяток секций, — но выбирает он только оттенок текста, не
+ * цвет фона. Если снова захочется светлой секции, её нужно заводить осознанно,
+ * а не возвращать это ветвление: смысл правки был именно в единой поверхности.
  */
 
 export function Shell({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <div className={`mx-auto w-full max-w-[1200px] px-5 sm:px-8 ${className}`}>{children}</div>;
 }
 
-export function Eyebrow({ children, tone = "dark" }: { children: ReactNode; tone?: "dark" | "light" }) {
+export function Eyebrow({ children }: { children: ReactNode; tone?: "dark" | "light" }) {
   return (
-    <p
-      className={`mb-5 flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] ${
-        tone === "dark" ? "text-snow-2" : "text-ink-2"
-      }`}
-    >
-      <span className={`inline-block h-px w-6 ${tone === "dark" ? "bg-primary-bright" : "bg-primary"}`} />
+    <p className="mb-5 flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-snow-2">
+      <span className="inline-block h-px w-6 bg-primary-bright" />
       {children}
     </p>
   );
@@ -29,7 +32,6 @@ export function Eyebrow({ children, tone = "dark" }: { children: ReactNode; tone
 
 export function Heading({
   children,
-  tone = "dark",
   size = "h2",
   className = "",
 }: {
@@ -41,9 +43,9 @@ export function Heading({
   return (
     <h2
       data-split
-      className={`text-balance font-[family-name:var(--font-display)] font-semibold leading-[1.04] tracking-[-0.035em] ${
+      className={`text-balance font-[family-name:var(--font-display)] font-semibold leading-[1.04] tracking-[-0.035em] text-snow ${
         size === "h1" ? "text-[length:var(--text-h1)]" : "text-[length:var(--text-h2)]"
-      } ${tone === "dark" ? "text-snow" : "text-ink-1"} ${className}`}
+      } ${className}`}
     >
       {children}
     </h2>
@@ -52,7 +54,6 @@ export function Heading({
 
 export function Lead({
   children,
-  tone = "dark",
   className = "",
 }: {
   children: ReactNode;
@@ -60,11 +61,7 @@ export function Lead({
   className?: string;
 }) {
   return (
-    <p
-      className={`max-w-[62ch] text-pretty text-[17px] leading-[1.65] sm:text-[19px] ${
-        tone === "dark" ? "text-snow-2" : "text-ink-2"
-      } ${className}`}
-    >
+    <p className={`max-w-[62ch] text-pretty text-[17px] leading-[1.65] text-snow-2 sm:text-[19px] ${className}`}>
       {children}
     </p>
   );
@@ -72,7 +69,6 @@ export function Lead({
 
 export function Section({
   id,
-  tone = "dark",
   children,
   className = "",
   bleed = false,
@@ -84,20 +80,13 @@ export function Section({
   className?: string;
   bleed?: boolean;
 } & React.HTMLAttributes<HTMLElement>) {
-  // Тёмные секции полупрозрачны: под ними живёт общий фон страницы
-  // (components/motion/backdrop.tsx). Светлые — сплошные: сияние сквозь них
-  // выглядело бы грязью, а не светом.
-  const bg =
-    tone === "light"
-      ? "bg-paper text-ink-1"
-      : tone === "night"
-        ? "bg-night/90 text-snow"
-        : "bg-ink/85 text-snow";
-
+  // Один фон на все секции, и он полупрозрачный: под ним живёт общее сияние
+  // страницы (components/motion/backdrop.tsx). Именно оно не даёт сплошной
+  // темноте стать плоской — стекло карточек светится за счёт него.
   return (
     <section
       id={id}
-      className={`relative overflow-hidden ${bg} ${bleed ? "" : "py-20 sm:py-28 lg:py-32"} ${className}`}
+      className={`relative overflow-hidden bg-ink/85 text-snow ${bleed ? "" : "py-20 sm:py-28 lg:py-32"} ${className}`}
       {...rest}
     >
       {children}
@@ -110,7 +99,6 @@ export function SectionHead({
   eyebrow,
   title,
   lead,
-  tone = "dark",
   align = "left",
   className = "",
 }: {
@@ -123,9 +111,9 @@ export function SectionHead({
 }) {
   return (
     <Reveal className={`${align === "center" ? "mx-auto max-w-[760px] text-center" : "max-w-[820px]"} ${className}`}>
-      <Eyebrow tone={tone}>{eyebrow}</Eyebrow>
-      <Heading tone={tone}>{title}</Heading>
-      {lead ? <Lead tone={tone} className={`mt-6 ${align === "center" ? "mx-auto" : ""}`}>{lead}</Lead> : null}
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <Heading>{title}</Heading>
+      {lead ? <Lead className={`mt-6 ${align === "center" ? "mx-auto" : ""}`}>{lead}</Lead> : null}
     </Reveal>
   );
 }

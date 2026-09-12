@@ -13,7 +13,7 @@ import type { Dict } from "@/lib/i18n";
  */
 export function CaseStudy({ d }: { d: Dict }) {
   return (
-    <Section tone="dark">
+    <Section>
       <Shell>
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
@@ -58,28 +58,35 @@ export function CaseStudy({ d }: { d: Dict }) {
   );
 }
 
+/**
+ * Сравнение «без системы / с системой».
+ *
+ * Смысл блока в РАЗНИЦЕ, и раньше её держал контраст светлой карточки с
+ * тёмной. На единой тёмной странице разницу держит материал: слева — глухое
+ * стекло без акцента, справа — та же карточка, но с синей кромкой и подсветкой.
+ */
 export function Comparison({ d }: { d: Dict }) {
   return (
-    <Section tone="light">
+    <Section>
       <Shell>
-        <SectionHead tone="light" align="center" eyebrow={d.compare.eyebrow} title={d.compare.title} />
+        <SectionHead align="center" eyebrow={d.compare.eyebrow} title={d.compare.title} />
 
         <div className="mx-auto mt-12 grid max-w-[900px] gap-4 sm:grid-cols-2 sm:gap-6">
-          <Reveal className="rounded-2xl border border-hairline bg-paper-2/60 p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-3">
+          <Reveal className="glass-soft rounded-2xl p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-snow-3">
               {d.compare.withoutLabel}
             </p>
             <ul data-stagger className="mt-5 space-y-3">
               {d.compare.without.map((w) => (
-                <li key={w} className="flex items-start gap-3 text-[14.5px] text-ink-2">
-                  <span className="mt-[7px] h-px w-3 shrink-0 bg-ink-3" aria-hidden="true" />
+                <li key={w} className="flex items-start gap-3 text-[14.5px] text-snow-2">
+                  <span className="mt-[7px] h-px w-3 shrink-0 bg-snow-3" aria-hidden="true" />
                   {w}
                 </li>
               ))}
             </ul>
           </Reveal>
 
-          <Reveal delay={90} className="rounded-2xl border border-primary/25 bg-ink p-6">
+          <Reveal delay={90} className="glass-sheen rounded-2xl border border-primary/25 bg-primary/10 p-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary-bright">
               {d.compare.withLabel}
             </p>

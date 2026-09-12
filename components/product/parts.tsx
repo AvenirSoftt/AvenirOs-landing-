@@ -20,9 +20,13 @@ export const tone = {
 
 export type Tone = keyof typeof tone;
 
+/**
+ * Карточка внутри макета — тонкое стекло, а не заливка: под ней лежит стекло
+ * рамки, и вторая сплошная плоскость поверх первой выглядела бы наклейкой.
+ */
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-xl border border-line-soft bg-[#141d29] p-3.5 sm:p-4 ${className}`}>
+    <div className={`glass-soft rounded-xl p-3.5 sm:p-4 ${className}`}>
       {children}
     </div>
   );
@@ -150,7 +154,7 @@ export function PlanBar({
           {value.toFixed(1).replace(".", ",")}%
         </span>
       </div>
-      <div className="relative h-1.5 overflow-hidden rounded-full bg-[#1e2a3a]">
+      <div className="relative h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
         <span
           className={`grow-x absolute inset-y-0 left-0 rounded-full ${tone[t].bg}`}
           style={{ width: `${Math.min(100, value)}%`, "--d": `${delay}ms` } as React.CSSProperties}
@@ -169,17 +173,5 @@ export function PlanBar({
         </span>
       </p>
     </div>
-  );
-}
-
-/** Подпись «демо-данные» — обязательна везде, где показаны числа. */
-export function DemoBadge({ label, className = "" }: { label: string; className?: string }) {
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-snow-3 ${className}`}
-    >
-      <i className="h-1.5 w-1.5 rounded-full bg-warning" aria-hidden="true" />
-      {label}
-    </span>
   );
 }

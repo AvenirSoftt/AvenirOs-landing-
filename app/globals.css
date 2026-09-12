@@ -457,13 +457,6 @@ body {
   background-size: 64px 64px;
 }
 
-.grid-lines-light {
-  background-image:
-    linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
-  background-size: 64px 64px;
-}
-
 /* Свечение под макетом интерфейса: не «неон», а мягкий подсвет снизу. */
 .product-glow::before {
   content: "";
@@ -480,13 +473,107 @@ body {
   pointer-events: none;
 }
 
-/* Рамка-«стекло» продуктовых макетов. */
-.panel {
-  background: linear-gradient(180deg, #131b26 0%, #0f151e 100%);
-  border: 1px solid var(--color-line);
+/* ── Жидкое стекло ─────────────────────────────────────────────
+   Одна поверхность на весь сайт: страница теперь целиком тёмная, и
+   отличать блоки друг от друга плотностью фона больше нельзя —
+   отличает их СВЕТ. Стекло даёт три вещи сразу: пропускает сияние
+   подложки (`.aurora`), держит верхнюю кромку-блик, по которой глаз
+   читает край, и отделяет карточку тенью, а не рамкой.
+
+   Почему не просто `backdrop-blur` из Tailwind: размытие без насыщения
+   даёт грязно-серый, а без внутреннего блика стекло выглядит как
+   полупрозрачный прямоугольник. Здесь всё три слоя вместе. */
+.glass {
+  background:
+    linear-gradient(
+      152deg,
+      rgba(148, 178, 255, 0.10) 0%,
+      rgba(19, 27, 38, 0.58) 42%,
+      rgba(10, 14, 20, 0.72) 100%
+    );
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(148, 180, 255, 0.14);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.025),
+    0 24px 60px -30px rgba(2, 6, 23, 0.9);
+}
+
+/* Тот же материал, но тоньше: для мелких карточек внутри макетов, где
+   сильное размытие съедало бы текст под ними. */
+.glass-soft {
+  background: linear-gradient(152deg, rgba(148, 178, 255, 0.07), rgba(17, 24, 34, 0.55));
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  border: 1px solid rgba(148, 180, 255, 0.10);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Блик по верхней кромке — то, что делает стекло стеклом, а не заливкой.
+   Отдельным слоем, потому что градиент фона уже занят самим материалом. */
+.glass-sheen {
+  position: relative;
+}
+
+.glass-sheen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(120% 60% at 12% -10%, rgba(255, 255, 255, 0.14), transparent 60%);
+}
+
+/* Слабое железо и режим экономии движения: размытие — самая дорогая
+   вещь на странице, и держать его ради красоты там, где человек просил
+   меньше эффектов, незачем. Материал остаётся, дорогой фильтр уходит. */
+@media (prefers-reduced-transparency: reduce), (prefers-reduced-motion: reduce) {
+  .glass,
+  .glass-soft {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: linear-gradient(152deg, rgba(26, 36, 51, 0.96), rgba(13, 17, 23, 0.98));
+  }
+}
+
+/* Рамка-«стекло» продуктовых макетов — тот же материал, что у карточек,
+   только плотнее: внутри неё лежит интерфейс, и текст обязан читаться. */
+.panel {
+  background:
+    linear-gradient(
+      170deg,
+      rgba(148, 178, 255, 0.08) 0%,
+      rgba(19, 27, 38, 0.82) 38%,
+      rgba(12, 17, 24, 0.9) 100%
+    );
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  border: 1px solid rgba(148, 180, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.10),
     0 40px 80px -32px rgba(2, 6, 23, 0.85);
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-reduced-motion: reduce) {
+  .panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: linear-gradient(180deg, #131b26 0%, #0f151e 100%);
+  }
+}
+
+/* Перетаскивание доски указателем (components/ui/drag-scroll.tsx).
+   Курсор — единственный признак, по которому человек понимает, что за
+   это можно тянуть, поэтому он меняется и в захвате. */
+.drag-x {
+  cursor: grab;
+}
+
+.drag-x[data-dragging="true"] {
+  cursor: grabbing;
+  user-select: none;
+  scroll-behavior: auto;
 }
 
 .hairline {

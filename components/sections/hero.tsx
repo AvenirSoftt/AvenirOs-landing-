@@ -1,5 +1,4 @@
-import { DashboardMockup } from "@/components/product/dashboard";
-import { DemoBadge } from "@/components/product/parts";
+import { LiveDashboard } from "@/components/product/live-dashboard";
 import { Button } from "@/components/ui/button";
 import { Shell } from "@/components/ui/section";
 import type { Dict } from "@/lib/i18n";
@@ -7,10 +6,16 @@ import type { Dict } from "@/lib/i18n";
 /**
  * Первый экран.
  *
- * Ровно три вещи, в этом порядке: что это, для кого и как выглядит. Макет
- * интерфейса стоит СРАЗУ под заголовком, а не «где-то ниже»: продукт продаёт
- * себя сам, и чем раньше человек видит настоящий экран, тем меньше ему нужно
- * верить словам.
+ * Ровно три вещи, в этом порядке: что это, для кого и как выглядит. Система
+ * стоит СРАЗУ под заголовком, а не «где-то ниже»: продукт продаёт себя сам, и
+ * чем раньше человек видит настоящий экран, тем меньше ему нужно верить
+ * словам. С 12.09.2026 этот экран ещё и работает — по меню можно ходить, а
+ * цифры живут (`LiveDashboard`).
+ *
+ * Плашек над заголовком и под макетом здесь больше нет (решение владельца):
+ * «Business operating system» повторяла первую строку подзаголовка, а
+ * «Демо-данные» отвлекала от самого экрана. Оговорка про демо-числа осталась
+ * там, где она и нужна, — в подвале и под доской CRM.
  *
  * Тексты приходят словарём: страница живёт на трёх языках, и хранить их в
  * разметке значило бы держать три копии секции.
@@ -26,14 +31,6 @@ export function Hero({ d }: { d: Dict }) {
 
       <Shell>
         <div className="mx-auto max-w-[900px] text-center">
-          <p
-            data-hero-eyebrow
-            className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-line bg-white/[0.03] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-snow-2"
-          >
-            <i className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
-            {d.hero.eyebrow}
-          </p>
-
           <h1
             data-hero-title
             className="text-balance font-[family-name:var(--font-display)] text-[length:var(--text-display)] font-extrabold leading-[0.98] tracking-[-0.042em] text-snow"
@@ -78,11 +75,11 @@ export function Hero({ d }: { d: Dict }) {
 
       <div className="relative mt-16 sm:mt-20">
         <Shell>
+          {/* Наклон при прокрутке ведёт GSAP по этому признаку. Внутри — живой
+              интерфейс, поэтому `perspective` остаётся на обёртке: наклонять
+              элемент, по которому кликают, нельзя — попадание уезжает. */}
           <div data-hero-screen className="product-glow relative [perspective:1600px]">
-            <DashboardMockup d={d} />
-          </div>
-          <div className="mt-5 flex justify-center">
-            <DemoBadge label={d.demoBadge} />
+            <LiveDashboard d={d} />
           </div>
         </Shell>
       </div>

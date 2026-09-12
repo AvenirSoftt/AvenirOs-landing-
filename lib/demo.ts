@@ -124,6 +124,31 @@ export const projects = [
   { name: "Nova Group", kind: 3, progress: 23, budget: "540.000.000", deadline: "05.11", lead: "GS", tasks: "6/26", tone: "danger" },
 ] as const;
 
+/**
+ * Задачи и контент-план — для разделов «Задачи» и «Контент-план» живого
+ * дашборда. Подписи статусов и колонок лежат в словаре, здесь только индексы:
+ * иначе русская версия страницы показывала бы узбекский интерфейс.
+ *
+ * `status` — позиция в `ui.taskStatuses`, `who` — в `team`, `channel` — в
+ * `ui.channels`.
+ */
+export const tasks = [
+  { title: 0, project: 0, status: 0, who: 0, due: "16.09", hours: "6/8" },
+  { title: 1, project: 1, status: 0, who: 3, due: "17.09", hours: "2/5" },
+  { title: 2, project: 0, status: 1, who: 1, due: "15.09", hours: "9/12" },
+  { title: 3, project: 2, status: 1, who: 2, due: "18.09", hours: "3/6" },
+  { title: 4, project: 3, status: 2, who: 0, due: "12.09", hours: "7/7" },
+  { title: 5, project: 1, status: 2, who: 3, due: "11.09", hours: "4/4" },
+] as const;
+
+export const content = [
+  { title: 0, channel: 0, date: "15.09", status: 0 },
+  { title: 1, channel: 1, date: "16.09", status: 1 },
+  { title: 2, channel: 2, date: "18.09", status: 1 },
+  { title: 3, channel: 0, date: "19.09", status: 2 },
+  { title: 4, channel: 1, date: "22.09", status: 2 },
+] as const;
+
 export const team = [
   { role: 0, name: "Aziz Rahimov", load: 92, tasks: 14, projects: 4 },
   { role: 1, name: "Dilnoza Yusupova", load: 84, tasks: 11, projects: 3 },

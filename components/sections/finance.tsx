@@ -1,5 +1,5 @@
 import { FinanceMockup } from "@/components/product/analytics";
-import { DemoBadge, HealthRing, PlanBar } from "@/components/product/parts";
+import { HealthRing, PlanBar } from "@/components/product/parts";
 import { CountUp } from "@/components/ui/count-up";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHead, Shell } from "@/components/ui/section";
@@ -12,10 +12,13 @@ import type { Dict } from "@/lib/i18n";
  * Три темы, но одна секция: по отдельности они дали бы три подряд идущие
  * «стены карточек». Здесь у каждой своя роль — крупные числа сверху, разбор
  * плана слева, интегральная оценка справа.
+ *
+ * Плашки «демо-данные» под блоком больше нет (12.09.2026, решение владельца):
+ * оговорка осталась в подвале, где она относится ко всей странице сразу.
  */
 export function Finance({ d }: { d: Dict }) {
   return (
-    <Section tone="dark">
+    <Section>
       <Shell>
         <SectionHead
           eyebrow={d.finance.eyebrow}
@@ -42,7 +45,7 @@ export function Finance({ d }: { d: Dict }) {
           </Reveal>
 
           <Reveal delay={90} className="space-y-6">
-            <div className="rounded-2xl border border-line bg-panel p-5">
+            <div className="glass rounded-2xl p-5">
               <p className="mb-4 text-[12.5px] font-semibold text-snow">{d.finance.planFact}</p>
               <div className="space-y-4">
                 {planFact.slice(0, 3).map((p, i) => (
@@ -61,7 +64,7 @@ export function Finance({ d }: { d: Dict }) {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-line bg-panel p-5">
+            <div className="glass rounded-2xl p-5">
               <div className="flex items-center gap-5">
                 <HealthRing score={health.score} size={104} />
                 <div className="min-w-0">
@@ -80,7 +83,7 @@ export function Finance({ d }: { d: Dict }) {
                         {p.score}/100
                       </span>
                     </div>
-                    <div className="h-1 overflow-hidden rounded-full bg-[#1e2a3a]">
+                    <div className="h-1 overflow-hidden rounded-full bg-white/[0.08]">
                       <span
                         className={`grow-x block h-full rounded-full ${p.score >= 60 ? "bg-success" : "bg-danger"}`}
                         style={{ width: Math.max(4, p.score) + "%", "--d": 300 + i * 90 + "ms" } as React.CSSProperties}
@@ -91,10 +94,6 @@ export function Finance({ d }: { d: Dict }) {
               </ul>
             </div>
           </Reveal>
-        </div>
-
-        <div className="mt-6 flex justify-center">
-          <DemoBadge label={d.demoBadge} />
         </div>
       </Shell>
     </Section>

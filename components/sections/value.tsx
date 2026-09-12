@@ -11,7 +11,7 @@ import type { Dict } from "@/lib/i18n";
  */
 export function DataFlow({ d }: { d: Dict }) {
   return (
-    <Section tone="night">
+    <Section>
       <Shell>
         <SectionHead
           align="center"
@@ -53,20 +53,20 @@ export function DataFlow({ d }: { d: Dict }) {
 
 export function Benefits({ d }: { d: Dict }) {
   return (
-    <Section tone="light">
+    <Section>
       <Shell>
-        <SectionHead tone="light" eyebrow={d.benefits.eyebrow} title={d.benefits.title} />
+        <SectionHead eyebrow={d.benefits.eyebrow} title={d.benefits.title} />
 
         <div data-stagger className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
           {d.benefits.items.map(([t, text], i) => (
-            <div key={t} className="border-t border-hairline pt-6">
-              <p className="text-[12px] font-semibold tabular text-primary">
+            <div key={t} className="border-t border-line pt-6">
+              <p className="text-[12px] font-semibold tabular text-primary-bright">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mt-3 font-[family-name:var(--font-display)] text-[21px] font-bold tracking-[-0.02em] text-ink-1 sm:text-[24px]">
+              <h3 className="mt-3 font-[family-name:var(--font-display)] text-[21px] font-bold tracking-[-0.02em] text-snow sm:text-[24px]">
                 {t}
               </h3>
-              <p className="mt-2.5 max-w-[46ch] text-[15px] leading-relaxed text-ink-2">{text}</p>
+              <p className="mt-2.5 max-w-[46ch] text-[15px] leading-relaxed text-snow-2">{text}</p>
             </div>
           ))}
         </div>
@@ -77,20 +77,20 @@ export function Benefits({ d }: { d: Dict }) {
 
 export function HowItWorks({ d }: { d: Dict }) {
   return (
-    <Section tone="light" className="pt-0">
+    <Section className="pt-0">
       <Shell>
-        <div className="border-t border-hairline pt-16 sm:pt-20">
-          <SectionHead tone="light" eyebrow={d.how.eyebrow} title={d.how.title} />
+        <div className="border-t border-line pt-16 sm:pt-20">
+          <SectionHead eyebrow={d.how.eyebrow} title={d.how.title} />
           <div data-stagger className="mt-12 grid gap-8 sm:grid-cols-3 sm:gap-6">
             {d.how.steps.map(([t, text], i) => (
               <div key={t}>
-                <span className="text-[13px] font-semibold tabular text-ink-3">
+                <span className="text-[13px] font-semibold tabular text-snow-3">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-2 font-[family-name:var(--font-display)] text-[19px] font-bold tracking-[-0.02em] text-ink-1">
+                <h3 className="mt-2 font-[family-name:var(--font-display)] text-[19px] font-bold tracking-[-0.02em] text-snow">
                   {t}
                 </h3>
-                <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">{text}</p>
+                <p className="mt-2 text-[14.5px] leading-relaxed text-snow-2">{text}</p>
               </div>
             ))}
           </div>

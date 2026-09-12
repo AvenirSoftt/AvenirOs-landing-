@@ -61,21 +61,16 @@ export function Modules({ d }: { d: Dict }) {
   };
 
   return (
-    <Section id="modullar" tone="light">
+    <Section id="modullar">
       <Shell>
-        <SectionHead
-          tone="light"
-          eyebrow={d.modules.eyebrow}
-          title={d.modules.title}
-          lead={d.modules.lead}
-        />
+        <SectionHead eyebrow={d.modules.eyebrow} title={d.modules.title} lead={d.modules.lead} />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[300px_1fr] lg:gap-10">
           <Reveal>
             <div
               role="radiogroup"
               aria-label={d.modules.aria}
-              className="rounded-2xl border border-hairline bg-card p-1.5"
+              className="glass-soft rounded-2xl p-1.5"
               onKeyDown={(e) => {
                 if (e.key === "ArrowDown" || e.key === "ArrowRight") {
                   e.preventDefault();
@@ -99,11 +94,11 @@ export function Modules({ d }: { d: Dict }) {
                     tabIndex={on ? 0 : -1}
                     onClick={() => setActive(m.key)}
                     className={`flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left transition-colors duration-300 ${
-                      on ? "bg-ink text-snow" : "text-ink-1 hover:bg-paper-2"
+                      on ? "bg-primary/15 text-snow" : "text-snow-2 hover:bg-white/[0.05] hover:text-snow"
                     }`}
                   >
                     <span
-                      className={`h-1.5 w-1.5 shrink-0 rounded-full ${on ? "bg-accent" : "bg-ink-3/50"}`}
+                      className={`h-1.5 w-1.5 shrink-0 rounded-full ${on ? "bg-accent" : "bg-snow-3/40"}`}
                       aria-hidden="true"
                     />
                     <span className="min-w-0 flex-1 truncate text-[14px] font-medium">
@@ -111,7 +106,7 @@ export function Modules({ d }: { d: Dict }) {
                     </span>
                     <span
                       className={`shrink-0 text-[10px] uppercase tracking-[0.12em] ${
-                        on ? "text-snow-3" : "text-ink-3"
+                        on ? "text-primary-bright/80" : "text-snow-3"
                       }`}
                     >
                       {d.modules.groups[m.group]}
@@ -124,10 +119,10 @@ export function Modules({ d }: { d: Dict }) {
 
           <Reveal delay={80} className="min-w-0">
             <div className="mb-4">
-              <h3 className="font-[family-name:var(--font-display)] text-[19px] font-bold tracking-[-0.02em] text-ink-1">
+              <h3 className="font-[family-name:var(--font-display)] text-[19px] font-bold tracking-[-0.02em] text-snow">
                 {name}
               </h3>
-              <p className="mt-1 max-w-[62ch] text-[14.5px] leading-relaxed text-ink-2">{desc}</p>
+              <p className="mt-1 max-w-[62ch] text-[14.5px] leading-relaxed text-snow-2">{desc}</p>
             </div>
 
             {/* Ключ плюс класс появления: при выборе другого раздела экран
@@ -148,7 +143,7 @@ export function Modules({ d }: { d: Dict }) {
                       .map((m) => (
                         <li
                           key={m.key}
-                          className="rounded-lg border border-line-soft bg-[#141d29] px-3 py-2 text-[12px] text-snow-3"
+                          className="glass-soft rounded-lg px-3 py-2 text-[12px] text-snow-3"
                         >
                           {d.modules.items[m.key][0]}
                         </li>

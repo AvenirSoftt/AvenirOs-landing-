@@ -30,7 +30,6 @@ export const uz = {
     skip: "Asosiy kontentga o'tish",
   },
   hero: {
-    eyebrow: "Business operating system",
     title: "Biznesingizning barcha jarayonlari",
     titleAccent: "bitta tizimda",
     lead: "AvenirOS — CRM, moliya, loyihalar va jamoani yagona tizimdan boshqarish uchun zamonaviy business operating system.",
@@ -38,7 +37,6 @@ export const uz = {
     ctaSecondary: "Tizimni ko'rish",
     facts: ["16 ta tizim bo'limi", "7 foydalanuvchi roli", "Agentlik amaliyotidan"],
   },
-  demoBadge: "Demo ma'lumot",
   crm: {
     eyebrow: "Sotuv",
     title: "Bu shunchaki ERP emas —",
@@ -337,6 +335,29 @@ export const uz = {
     // функции через эту границу не проходят («Functions cannot be passed
     // directly to Client Components»).
     teamNote: "{tasks} ta vazifa · {projects} ta loyiha",
+    tasksTitle: "AvenirOS — Vazifalar",
+    taskStatuses: ["Ishda", "Tekshiruvda", "Bajarildi"],
+    taskHours: "Soatlar",
+    taskTitles: [
+      "Sentabr uchun kontent reja",
+      "Yangi lending uchun matnlar",
+      "Reklama kabinetini sozlash",
+      "Brend kitobi maketi",
+      "Avgust hisoboti",
+      "Mijoz bilan uchrashuv yakuni",
+    ],
+    contentTitle: "AvenirOS — Kontent reja",
+    contentCols: ["Post", "Kanal", "Sana", "Holat"],
+    contentStatuses: ["G'oya", "Ishlanmoqda", "Tasdiqlangan"],
+    contentTitles: [
+      "Mahsulot yangiliklari — sentabr",
+      "Mijoz keysi: Alfa Textile",
+      "Jamoa bilan tanishuv",
+      "Reels: ish jarayoni",
+      "Oylik natijalar",
+    ],
+    channels: ["Instagram", "Telegram", "YouTube"],
+    liveHint: "Menyudan bo'limni tanlang — ekranlar jonli",
     aiTitle: "AvenirOS — AI assistent",
     months: ["Yan", "Fev", "Mar", "Apr", "May", "Iyn", "Iyl", "Avg", "Sen", "Okt", "Noy", "Dek"],
     railGroups: ["Ish", "Analitika"],

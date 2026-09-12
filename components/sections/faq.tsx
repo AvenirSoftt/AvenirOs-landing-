@@ -20,12 +20,12 @@ export function Faq({ d }: { d: Dict }) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <Section id="faq" tone="light">
+    <Section id="faq">
       <Shell>
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-          <SectionHead tone="light" eyebrow={d.faq.eyebrow} title={d.faq.title} lead={d.faq.lead} />
+          <SectionHead eyebrow={d.faq.eyebrow} title={d.faq.title} lead={d.faq.lead} />
 
-          <Reveal as="dl" className="divide-y divide-hairline border-y border-hairline">
+          <Reveal as="dl" className="divide-y divide-line border-y border-line">
             {d.faq.items.map(([q, a], i) => {
               const isOpen = open === i;
               return (
@@ -38,12 +38,12 @@ export function Faq({ d }: { d: Dict }) {
                       aria-controls={"faq-" + i}
                       className="flex w-full items-start justify-between gap-6 py-5 text-left"
                     >
-                      <span className="text-[15.5px] font-medium leading-snug text-ink-1 sm:text-[17px]">
+                      <span className="text-[15.5px] font-medium leading-snug text-snow sm:text-[17px]">
                         {q}
                       </span>
                       <span
-                        className={`mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-hairline text-ink-2 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                          isOpen ? "rotate-45 border-primary/40 text-primary" : ""
+                        className={`mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-line text-snow-2 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                          isOpen ? "rotate-45 border-primary/40 text-primary-bright" : ""
                         }`}
                         aria-hidden="true"
                       >
@@ -54,7 +54,7 @@ export function Faq({ d }: { d: Dict }) {
                     </button>
                   </dt>
                   <dd id={"faq-" + i} hidden={!isOpen} className="pb-6 pr-10">
-                    <p className="max-w-[68ch] text-[14.5px] leading-relaxed text-ink-2">{a}</p>
+                    <p className="max-w-[68ch] text-[14.5px] leading-relaxed text-snow-2">{a}</p>
                   </dd>
                 </div>
               );
